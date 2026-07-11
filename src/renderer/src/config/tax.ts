@@ -1,0 +1,1 @@
+export const DEFAULT_GST_RATE = 5;
