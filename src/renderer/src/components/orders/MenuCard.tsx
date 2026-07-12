@@ -51,7 +51,7 @@ function MenuCard({ item, quantity, onIncreaseQuantity, onDecreaseQuantity }: Me
                                 onDecreaseQuantity(item.id);
                             }}
                         >
-                            <Minus size="sm" />
+                            <Minus size={16} />
                         </Button>
 
                         <span className="w-8 text-center font-semibold">
@@ -67,7 +67,7 @@ function MenuCard({ item, quantity, onIncreaseQuantity, onDecreaseQuantity }: Me
                                 onIncreaseQuantity(item);
                             }}
                         >
-                            <Plus size="sm" />
+                            <Plus size={16} />
                         </Button>
                     </div>
                 )}

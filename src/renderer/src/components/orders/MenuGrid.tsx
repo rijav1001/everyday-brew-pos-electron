@@ -1,19 +1,19 @@
-import { MENU_ITEMS } from "@renderer/config/menu";
-
 import MenuCard from "./MenuCard";
 import EmptyState from "../shared/EmptyState";
 import { MenuItem } from "@renderer/types/menu";
 import { OrderItem } from "@renderer/types/order";
+import type { MenuItemDto } from "src/shared/menu";
 
 interface MenuGridProps {
     categoryId: string;
     orderItems: OrderItem[];
     onIncreaseQuantity: (item: MenuItem) => void;
     onDecreaseQuantity: (itemId: string) => void;
+    menuItems: MenuItemDto[];
 }
 
-function MenuGrid({ categoryId, orderItems, onIncreaseQuantity, onDecreaseQuantity }: MenuGridProps) {
-    const items = MENU_ITEMS.filter(
+function MenuGrid({ categoryId, orderItems, onIncreaseQuantity, onDecreaseQuantity, menuItems }: MenuGridProps) {
+    const items = menuItems.filter(
         item => item.categoryId == categoryId
     );
 

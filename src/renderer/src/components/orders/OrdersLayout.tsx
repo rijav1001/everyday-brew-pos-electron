@@ -5,6 +5,8 @@ import OrderSummary from "./OrderSummary";
 import { MenuItem } from "@renderer/types/menu";
 import { PaymentMethod } from "@renderer/types/payment";
 import { OrderItem } from "@renderer/types/order";
+import type { CategoryDto } from "src/shared/category";
+import type { MenuItemDto } from "src/shared/menu";
 
 interface OrdersLayoutProps {
     selectedCategory: string;
@@ -22,6 +24,8 @@ interface OrdersLayoutProps {
     onSplitUpiChange: (value: number | null) => void;
     onCompleteOrder: () => void;
     isPaymentValid: boolean;
+    categories: CategoryDto[];
+    menuItems: MenuItemDto[];
 }
 
 function OrdersLayout({ 
@@ -39,7 +43,9 @@ function OrdersLayout({
     splitUpi,
     onSplitUpiChange,
     onCompleteOrder,
-    isPaymentValid
+    isPaymentValid,
+    categories,
+    menuItems
 }: OrdersLayoutProps) {
     return (
         <div className="grid h-full gap-6"
@@ -49,7 +55,8 @@ function OrdersLayout({
             <section className="rounded-2xl bg-(--surface) p-5 shadow-sm">
                 <CategoriesPanel 
                     selectedCategory={selectedCategory}
-                    onCategorySelect={onCategorySelect}    
+                    onCategorySelect={onCategorySelect} 
+                    categories={categories}   
                 />
             </section>
 
@@ -57,6 +64,7 @@ function OrdersLayout({
                 <MenuGrid 
                     categoryId={selectedCategory}
                     orderItems={orderItems}
+                    menuItems={menuItems}
                     onIncreaseQuantity={onIncreaseQuantity}
                     onDecreaseQuantity={onDecreaseQuantity}
                 />

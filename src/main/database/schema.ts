@@ -1,4 +1,5 @@
 import { getDatabase } from "./database";
+import { seedDatabase } from "./seed";
 
 export function initializeDatabase(): void {
     const db = getDatabase();
@@ -72,4 +73,6 @@ export function initializeDatabase(): void {
     `);
 
     console.log("✅ SQLite initialized");
+
+    seedDatabase();
 }

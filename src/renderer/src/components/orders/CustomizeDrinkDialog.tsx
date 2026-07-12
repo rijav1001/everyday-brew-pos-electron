@@ -95,7 +95,7 @@ function CustomizeDrinkDialog({
                         </p>
                     </div>
 
-                    {item.addons.length > 0 && (
+                    {item.addOns.length > 0 && (
 
                         <div>
                             <h4 className="mb-3 text-sm font-semibold">
@@ -103,7 +103,7 @@ function CustomizeDrinkDialog({
                             </h4>
 
                             <div className="space-y-3">
-                                {item.addons.map(addon => {
+                                {item.addOns.map(addon => {
                                     const isSelected = selectedAddons.some(
                                         value => value.id === addon.id
                                     );

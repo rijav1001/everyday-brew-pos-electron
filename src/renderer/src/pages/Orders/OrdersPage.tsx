@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-fallthrough */
 import PageHeader from "@renderer/components/shared/PageHeader";
 import OrdersLayout from "@renderer/components/orders/OrdersLayout";
 import CustomizeDrinkDialog from "@renderer/components/orders/CustomizeDrinkDialog";
 import { useState } from "react";
+import { useMenu } from "@renderer/hooks/useMenu";
 import { MenuItem, MenuAddon } from "@renderer/types/menu";
 import { PaymentMethod } from "@renderer/types/payment";
 import { areAddonsEqual, formatNotes, normalizeNotes } from "@renderer/utils/order";
@@ -11,7 +13,7 @@ import { isSplitPaymentValid } from "@renderer/utils/payment";
 import { CompletedOrder, OrderItem } from "@renderer/types/order";
 
 function OrdersPage() {
-    const [selectedCategory, setSelectedCategory] = useState("hot-coffee");
+    const { categories, menuItems, selectedCategory, setSelectedCategory } = useMenu();
     const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
     const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
     const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItem | null>(null);
@@ -21,7 +23,10 @@ function OrdersPage() {
     const [splitUpi, setSplitUpi] = useState<number | null>(null);
 
     function handleIncreaseQuantity(menuItem: MenuItem) {
-        if (menuItem.addons.length > 0) {
+        console.log(Object.keys(menuItem));
+        console.log(menuItem.addOns);
+        console.log((menuItem as any).addons);
+        if (menuItem.addOns.length > 0) {
             setSelectedMenuItem(menuItem);
             setCustomizeDialogOpen(true);
             return;
@@ -187,6 +192,8 @@ function OrdersPage() {
                     onSplitUpiChange={setSplitUpi}
                     onCompleteOrder={handleCompleteOrder}
                     isPaymentValid={isPaymentValid}
+                    categories={categories}
+                    menuItems={menuItems}
                 />
 
                 <CustomizeDrinkDialog

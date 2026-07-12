@@ -1,4 +1,4 @@
-import { contextBridge } from 'electron'
+import { contextBridge,ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
@@ -10,7 +10,19 @@ const api = {}
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', electronAPI)
-    contextBridge.exposeInMainWorld('api', api)
+    contextBridge.exposeInMainWorld('api', {
+      category: {
+        getAll: () => ipcRenderer.invoke("category:getAll")
+      },
+
+      menu: {
+        getByCategory: (categoryId: string) =>
+          ipcRenderer.invoke("menu:getByCategory", categoryId),
+
+        getAddons: (menuItemId: string) =>
+          ipcRenderer.invoke("menu:getAddons", menuItemId)
+      }
+    })
   } catch (error) {
     console.error(error)
   }

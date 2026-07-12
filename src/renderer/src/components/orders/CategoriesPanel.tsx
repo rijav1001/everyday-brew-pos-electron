@@ -1,13 +1,13 @@
 import CategoryItem from "./CategoryItem";
-
-import { MENU_CATEGORIES } from "@renderer/config/menu";
+import type { CategoryDto } from "src/shared/category";
 
 interface CategoriesPanelProps {
     selectedCategory: string;
     onCategorySelect: (categoryId: string) => void;
+    categories: CategoryDto[];
 }
 
-function CategoriesPanel({ selectedCategory, onCategorySelect }: CategoriesPanelProps) {
+function CategoriesPanel({ selectedCategory, onCategorySelect, categories }: CategoriesPanelProps) {
     return (
         <>
             <div className="mb-5">
@@ -19,7 +19,7 @@ function CategoriesPanel({ selectedCategory, onCategorySelect }: CategoriesPanel
             </div>
 
             <div className="flex flex-col gap-2">
-                {MENU_CATEGORIES.map((category) => (
+                {categories.map((category) => (
                     <CategoryItem
                         key={category.id}
                         category={category}

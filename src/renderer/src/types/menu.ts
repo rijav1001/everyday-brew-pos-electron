@@ -1,27 +1,10 @@
-export type MenuCategoryIcon =
-    | "coffee"
-    | "snowflake"
-    | "cup"
-    | "cookie";
+import { MenuItemDto, MenuAddonDto } from "src/shared/menu";
+import { CategoryDto, MenuCategoryIcon } from "src/shared/category";
 
-export interface MenuCategory {
-    id: string;
-    name: string;
-    icon: MenuCategoryIcon;
-}
+export type { MenuCategoryIcon };
 
-export interface MenuAddon {
-    id: string;
-    name: string;
-    price: number;
-}
+export type Category = CategoryDto;
 
-export interface MenuItem {
-    id: string;
-    categoryId: string;
-    name: string;
-    displayPrice: number;
-    gstRate: number;
-    available: boolean;
-    addons: MenuAddon[];
-}
+export type MenuItem = MenuItemDto;
+
+export type MenuAddon = MenuAddonDto;

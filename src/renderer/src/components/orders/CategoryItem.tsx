@@ -1,10 +1,10 @@
 import { Coffee, CupSoda, Cookie, Snowflake } from "lucide-react";
 
 import { cn } from "@renderer/lib/utils";
-import type { MenuCategory } from "@renderer/types/menu";
+import type { Category } from "@renderer/types/menu";
 
 interface CategoryItemProps {
-    category: MenuCategory;
+    category: Category;
     selected: boolean;
     onClick: (categoryId: string) => void;
 }
