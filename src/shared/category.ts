@@ -10,3 +10,8 @@ export interface CategoryDto {
     icon: string;
     sortOrder: number;
 }
+
+export interface CreateCategoryRequest {
+    name: string;
+    icon: MenuCategoryIcon;
+}

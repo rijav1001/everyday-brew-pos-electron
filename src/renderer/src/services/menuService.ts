@@ -1,5 +1,6 @@
 import type { 
-    CategoryDto
+    CategoryDto,
+    CreateCategoryRequest
 } from "../../../shared/category";
 
 import type {
@@ -19,4 +20,16 @@ export const menuService = {
     getAddons(menuItemId: string) {
         return window.api.menu.getAddons(menuItemId) as Promise<MenuAddonDto[]>;
     },
+
+    createCategory(category: CreateCategoryRequest) {
+        return window.api.category.create(category);
+    },
+
+    updateCategory(category: CategoryDto) {
+        return window.api.category.update(category);
+    },
+
+    deleteCategory(id: string) {
+        return window.api.category.delete(id);
+    }
 };

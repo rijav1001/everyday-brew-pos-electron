@@ -1,5 +1,6 @@
 import { contextBridge,ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
+import { CategoryDto, CreateCategoryRequest } from '../shared/category'
 
 // Custom APIs for renderer
 const api = {}
@@ -12,7 +13,10 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('api', {
       category: {
-        getAll: () => ipcRenderer.invoke("category:getAll")
+        getAll: () => ipcRenderer.invoke("category:getAll"),
+        create: (category: CreateCategoryRequest) => ipcRenderer.invoke("category:create", category),
+        update: (category: CategoryDto) => ipcRenderer.invoke("category:update", category),
+        delete: (id: string) => ipcRenderer.invoke("category:delete", id)
       },
 
       menu: {

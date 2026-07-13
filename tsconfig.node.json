@@ -6,7 +6,7 @@
     "src/preload/**/*", 
     "src/shared/**/*", 
     "src/renderer/src/**/*.d.ts"
-  ],
+, "src/renderer/src/constants/categoryIcons.ts"  ],
   "compilerOptions": {
     "composite": true,
     "types": ["electron-vite/node"]
