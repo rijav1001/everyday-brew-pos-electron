@@ -7,10 +7,10 @@ export class CategoryRepository {
 
     private readonly getAllStatement = this.database.prepare(`
         SELECT
-        id,
-        name,
-        icon,
-        sort_order AS sortOrder
+            id,
+            name,
+            icon,
+            sort_order AS sortOrder
         FROM categories
         ORDER BY sort_order
     `);

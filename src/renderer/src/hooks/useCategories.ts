@@ -34,7 +34,6 @@ export function useCategories() {
 
             throw new Error();
         }
-        
     }
 
     async function updateCategory(category: CategoryDto) {
@@ -55,7 +54,7 @@ export function useCategories() {
         try {
             await menuService.deleteCategory(id);
 
-            toast.success("Category Deleted Successfully.");
+            toast.success("Category deleted successfully!");
 
             await loadCategories();
         } catch {

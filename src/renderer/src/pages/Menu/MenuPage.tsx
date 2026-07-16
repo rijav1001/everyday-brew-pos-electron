@@ -1,17 +1,13 @@
 import PageHeader from "@renderer/components/shared/PageHeader";
 import CategoriesTable from "@renderer/components/menu/CategoriesTable";
 import { useCategories } from "@renderer/hooks/useCategories";
+import MenuItemsTable from "@renderer/components/menu/MenuItemsTable";
+import { useMenuItems } from "@renderer/hooks/useMenuItems";
 
 function MenuPage() {
-    const {
-        categories,
+    const { categories, createCategory, updateCategory, deleteCategory } = useCategories();
 
-        createCategory,
-
-        updateCategory,
-
-        deleteCategory,
-    } = useCategories();
+    const { menuItems, createMenuItem, updateMenuItem, deleteMenuItem, createAddon, updateAddon, deleteAddon } = useMenuItems();
 
     return (
         <div className="flex h-full flex-col">
@@ -27,6 +23,19 @@ function MenuPage() {
                     onUpdate={updateCategory}
                     onDelete={deleteCategory}
                 />
+
+                <div className="mt-6">
+                    <MenuItemsTable
+                        menuItems={menuItems}
+                        categories={categories}
+                        onCreate={createMenuItem}
+                        onUpdate={updateMenuItem}
+                        onDelete={deleteMenuItem}
+                        onCreateAddon={createAddon}
+                        onUpdateAddon={updateAddon}
+                        onDeleteAddon={deleteAddon}
+                    />
+                </div>
             </div>
         </div>
     );
