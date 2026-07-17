@@ -2,6 +2,7 @@ import { contextBridge,ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import { CategoryDto, CreateCategoryRequest } from '../shared/category'
 import { CreateMenuAddonRequest, CreateMenuItemRequest, MenuAddonDto, MenuItemDto } from '../shared/menu'
+import { CompletedOrderDto } from '../shared/order'
 
 // Custom APIs for renderer
 const api = {}
@@ -13,6 +14,7 @@ if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', electronAPI)
     contextBridge.exposeInMainWorld('api', {
+      // categories
       category: {
         getAll: () => 
           ipcRenderer.invoke("category:getAll"),
@@ -27,6 +29,7 @@ if (process.contextIsolated) {
           ipcRenderer.invoke("category:delete", id)
       },
 
+      // menus
       menu: {
         getByCategory: (categoryId: string) =>
           ipcRenderer.invoke("menu:getByCategory", categoryId),
@@ -56,6 +59,15 @@ if (process.contextIsolated) {
           delete: (id: string) =>
             ipcRenderer.invoke("menu:addon:delete", id),
         }
+      },
+
+      // orders
+      order: {
+        getNextBillNumber: () =>
+            ipcRenderer.invoke("order:getNextBillNumber"),
+
+        save: (order: CompletedOrderDto) =>
+            ipcRenderer.invoke("order:save", order),
       },
     })
   } catch (error) {

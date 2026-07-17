@@ -10,7 +10,9 @@ import { PaymentMethod } from "@renderer/types/payment";
 import { areAddonsEqual, formatNotes, normalizeNotes } from "@renderer/utils/order";
 import { calculateBillingSummary } from "@renderer/utils/billing";
 import { isSplitPaymentValid } from "@renderer/utils/payment";
-import { CompletedOrder, OrderItem } from "@renderer/types/order";
+import { OrderItem } from "@renderer/types/order";
+import { orderService } from "@renderer/services/orderService";
+import { mapCompletedOrder } from "@renderer/mappers/orderMapper";
 
 function OrdersPage() {
     const { categories, menuItems, selectedCategory, setSelectedCategory } = useMenu();
@@ -150,26 +152,28 @@ function OrdersPage() {
 
     })();
 
-    const completedOrder: CompletedOrder = {
-        items: orderItems,
-        billing,
-        paymentMethod,
-        completedAt: new Date()
-    }
-
-    function handleCompleteOrder() {
+    async function handleCompleteOrder() {
         if (!isPaymentValid) {
             return;
         }
 
-        console.log(completedOrder);
+        try {
+            const completedOrder = mapCompletedOrder(
+                orderItems,
+                billing,
+                paymentMethod,
+            );
+            await orderService.saveOrder(completedOrder);
 
-        // Reset states after complete order is clicked
-        setOrderItems([]);
-        setPaymentMethod("cash");
-        setCashReceived(null);
-        setSplitCash(null);
-        setSplitUpi(null);
+            // Reset state
+            setOrderItems([]);
+            setPaymentMethod("cash");
+            setCashReceived(null);
+            setSplitCash(null);
+            setSplitUpi(null);
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (
