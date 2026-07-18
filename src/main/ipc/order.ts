@@ -16,4 +16,14 @@ export function registerOrderHandlers(): void {
             repository.saveOrder(order);
         },
     );
+
+    ipcMain.handle(
+        "order:getHistory", () =>
+            repository.getHistory(),
+    );
+
+    ipcMain.handle(
+        "order:getDetails", (_event, id: string) =>
+            repository.getDetails(id),
+    );
 }

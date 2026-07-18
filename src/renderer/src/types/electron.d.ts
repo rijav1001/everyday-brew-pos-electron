@@ -1,6 +1,7 @@
 import { CategoryDto, CreateCategoryRequest } from "../../../shared/category";
 import { CreateMenuItemRequest, MenuItemDto } from "../../../shared/menu";
 import { CompletedOrderDto } from "../../../shared/order";
+import { OrderHistoryItemDto } from "../../../shared/orderHistory";
 
 export interface ElectronAPI {
     category: {
@@ -28,5 +29,7 @@ export interface ElectronAPI {
     order: {
         getNextBillNumber(): Promise<string>;
         save(order: CompletedOrderDto): Promise<void>;
+        getHistory(): Promise<OrderHistoryItemDto[]>;
+        getDetails(id: string): Promise<OrderDetailsDto>;
     }
 }

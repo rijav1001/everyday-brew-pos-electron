@@ -64,10 +64,16 @@ if (process.contextIsolated) {
       // orders
       order: {
         getNextBillNumber: () =>
-            ipcRenderer.invoke("order:getNextBillNumber"),
+          ipcRenderer.invoke("order:getNextBillNumber"),
 
         save: (order: CompletedOrderDto) =>
-            ipcRenderer.invoke("order:save", order),
+          ipcRenderer.invoke("order:save", order),
+
+        getHistory: () =>
+          ipcRenderer.invoke("order:getHistory"),
+
+        getDetails: (id: string) =>
+          ipcRenderer.invoke("order:getDetails", id),
       },
     })
   } catch (error) {

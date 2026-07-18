@@ -29,3 +29,9 @@ export interface CompletedOrderDto {
 
     items: OrderItemDto[];
 }
+
+export interface OrderDetailsDto extends CompletedOrderDto {
+    id: string;
+
+    billNumber: string;
+}
