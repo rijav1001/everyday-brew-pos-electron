@@ -26,6 +26,9 @@ interface OrdersLayoutProps {
     isPaymentValid: boolean;
     categories: CategoryDto[];
     menuItems: MenuItemDto[];
+    printReceipt: boolean;
+    onPrintReceiptChange: (checked: boolean) => void;
+    isCompletingOrder: boolean;
 }
 
 function OrdersLayout({ 
@@ -45,7 +48,10 @@ function OrdersLayout({
     onCompleteOrder,
     isPaymentValid,
     categories,
-    menuItems
+    menuItems,
+    printReceipt,
+    onPrintReceiptChange,
+    isCompletingOrder
 }: OrdersLayoutProps) {
     return (
         <div className="grid h-full gap-6"
@@ -83,6 +89,9 @@ function OrdersLayout({
                     onSplitUpiChange={onSplitUpiChange}
                     onCompleteOrder={onCompleteOrder}
                     isPaymentValid={isPaymentValid}
+                    printReceipt={printReceipt}
+                    onPrintReceiptChange={onPrintReceiptChange}
+                    isCompletingOrder={isCompletingOrder}
                 />
             </section>
 

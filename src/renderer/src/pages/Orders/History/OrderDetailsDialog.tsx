@@ -1,5 +1,6 @@
 import { Button } from "@renderer/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@renderer/components/ui/dialog";
+import { receiptService } from "@renderer/services/receiptService";
 import { OrderDetailsDto } from "src/shared/order";
 
 interface OrderDetailsDialogProps {
@@ -170,11 +171,12 @@ function OrderDetailsDialog({
 
                         </div>
 
-                        <div className="border-t pt-4 flex justify-end cursor-pointer">
+                        <div className="border-t pt-4 flex justify-end">
                             <Button
-                                onClick={() => {
-                                    // TODO: Print receipt
-                                }}
+                                className="cursor-pointer"
+                                onClick={async () => 
+                                    await receiptService.print(order.id)
+                                }
                             >
                                 Print Receipt
                             </Button>

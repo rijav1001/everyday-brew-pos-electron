@@ -12,9 +12,8 @@ export function registerOrderHandlers(): void {
     );
 
     ipcMain.handle(
-        "order:save", (_event, order: CompletedOrderDto) => {
-            repository.saveOrder(order);
-        },
+        "order:save", (_, order: CompletedOrderDto) =>
+            repository.saveOrder(order),
     );
 
     ipcMain.handle(

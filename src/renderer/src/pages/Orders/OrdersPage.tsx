@@ -13,6 +13,8 @@ import { isSplitPaymentValid } from "@renderer/utils/payment";
 import { OrderItem } from "@renderer/types/order";
 import { orderService } from "@renderer/services/orderService";
 import { mapCompletedOrder } from "@renderer/mappers/orderMapper";
+import { receiptService } from "@renderer/services/receiptService";
+import { toast } from "sonner";
 
 function OrdersPage() {
     const { categories, menuItems, selectedCategory, setSelectedCategory } = useMenu();
@@ -23,6 +25,8 @@ function OrdersPage() {
     const [cashReceived, setCashReceived] = useState<number | null>(null);
     const [splitCash, setSplitCash] = useState<number | null>(null);
     const [splitUpi, setSplitUpi] = useState<number | null>(null);
+    const [printReceipt, setPrintReceipt] = useState(true);
+    const [isCompletingOrder, setIsCompletingOrder] = useState(false);
 
     function handleIncreaseQuantity(menuItem: MenuItem) {
         console.log(Object.keys(menuItem));
@@ -153,9 +157,11 @@ function OrdersPage() {
     })();
 
     async function handleCompleteOrder() {
-        if (!isPaymentValid) {
+        if (!isPaymentValid || isCompletingOrder) {
             return;
         }
+
+        setIsCompletingOrder(true);
 
         try {
             const completedOrder = mapCompletedOrder(
@@ -163,7 +169,20 @@ function OrdersPage() {
                 billing,
                 paymentMethod,
             );
-            await orderService.saveOrder(completedOrder);
+
+            const orderId = await orderService.saveOrder(completedOrder);
+
+            try {
+                if (printReceipt) {
+                    await receiptService.print(orderId);
+                }
+            } catch (error) {
+                console.error(error);
+                
+                toast.error(
+                    "Order saved successfully, but the receipt could not be printed."
+                );
+            }
 
             // Reset state
             setOrderItems([]);
@@ -173,6 +192,8 @@ function OrdersPage() {
             setSplitUpi(null);
         } catch (error) {
             console.error(error);
+        } finally {
+            setIsCompletingOrder(false);
         }
     }
 
@@ -198,6 +219,9 @@ function OrdersPage() {
                     isPaymentValid={isPaymentValid}
                     categories={categories}
                     menuItems={menuItems}
+                    printReceipt={printReceipt}
+                    onPrintReceiptChange={setPrintReceipt}
+                    isCompletingOrder={isCompletingOrder}
                 />
 
                 <CustomizeDrinkDialog

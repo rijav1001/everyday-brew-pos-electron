@@ -7,7 +7,7 @@ export const orderService = {
     },
 
     saveOrder(order: CompletedOrderDto) {
-        return window.api.order.save(order) as Promise<void>;
+        return window.api.order.save(order) as Promise<string>;
     },
 
     getHistory() {

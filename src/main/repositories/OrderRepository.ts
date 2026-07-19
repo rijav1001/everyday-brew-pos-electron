@@ -105,12 +105,12 @@ export class OrderRepository {
         return `EB${next.toString().padStart(6, "0")}`;
     }
 
-    saveOrder(order: CompletedOrderDto): void {
+    saveOrder(order: CompletedOrderDto): string {
+        const orderId = randomUUID();
+        const billNumber = this.getNextBillNumber();
+
         const transaction = this.database.transaction(
             (completedOrder: CompletedOrderDto) => {
-                const orderId = randomUUID();
-                const billNumber = this.getNextBillNumber();
-
                 this.insertOrderStatement.run(
                     orderId,
                     billNumber,
@@ -147,6 +147,8 @@ export class OrderRepository {
         );
 
         transaction(order);
+
+        return orderId;
     }
 
     getHistory(): OrderHistoryItemDto[] {

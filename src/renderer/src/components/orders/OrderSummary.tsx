@@ -9,6 +9,7 @@ import { Button } from "../ui/button";
 import { calculateBillingSummary } from "@renderer/utils/billing";
 import CashPayment from "./CashPayment";
 import SplitPayment from "./SplitPayment";
+import { Checkbox } from "../ui/checkbox";
 
 interface OrderSummaryProps {
     items: OrderItem[];
@@ -22,6 +23,9 @@ interface OrderSummaryProps {
     onSplitUpiChange: (value: number | null) => void;
     onCompleteOrder: () => void;
     isPaymentValid: boolean;
+    printReceipt: boolean;
+    onPrintReceiptChange: (checked: boolean) => void;
+    isCompletingOrder: boolean;
 }
 
 function OrderSummary({ 
@@ -35,7 +39,10 @@ function OrderSummary({
     splitUpi,
     onSplitUpiChange,
     onCompleteOrder,
-    isPaymentValid
+    isPaymentValid,
+    printReceipt,
+    onPrintReceiptChange,
+    isCompletingOrder
 }: OrderSummaryProps) {
     const billing = calculateBillingSummary(items)
 
@@ -183,13 +190,29 @@ function OrderSummary({
 
                         </div>
 
+                        <div className="flex items-center space-x-2">
+
+                            <Checkbox
+                                id="print-receipt"
+                                checked={printReceipt}
+                                onCheckedChange={(checked) =>
+                                    onPrintReceiptChange(checked === true)
+                                }
+                            />
+
+                            <label htmlFor="print-receipt" className="text-sm font-medium">
+                                Print receipt after completing order
+                            </label>
+
+                        </div>
+
                         {/* Complete Order */}
                         <Button
                             className="mt-6 w-full cursor-pointer"
-                            disabled={!items.length || !isPaymentValid}
+                            disabled={!items.length || !isPaymentValid || isCompletingOrder}
                             onClick={onCompleteOrder}
                         >
-                            Complete Order
+                            {isCompletingOrder ? "Completing Order..." : "Complete Order"}
                         </Button>
                     </div>
                 </>

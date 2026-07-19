@@ -28,8 +28,12 @@ export interface ElectronAPI {
 
     order: {
         getNextBillNumber(): Promise<string>;
-        save(order: CompletedOrderDto): Promise<void>;
+        save(order: CompletedOrderDto): Promise<string>;
         getHistory(): Promise<OrderHistoryItemDto[]>;
         getDetails(id: string): Promise<OrderDetailsDto>;
+    };
+
+    receipt: {
+        print(orderId: string): Promise<void>;
     }
 }

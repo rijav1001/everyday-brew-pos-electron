@@ -75,6 +75,11 @@ if (process.contextIsolated) {
         getDetails: (id: string) =>
           ipcRenderer.invoke("order:getDetails", id),
       },
+
+      receipt: {
+        print: (orderId: string) =>
+          ipcRenderer.invoke("receipt:print", orderId),
+      },
     })
   } catch (error) {
     console.error(error)
