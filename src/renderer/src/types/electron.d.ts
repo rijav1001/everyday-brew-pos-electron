@@ -1,4 +1,5 @@
 import { CategoryDto, CreateCategoryRequest } from "../../../shared/category";
+import { DashboardSummaryDto, HourlySalesDto, PaymentMethodSummaryDto, RecentOrderDto, TopSellingItemDto } from "../../../shared/dashboard";
 import { CreateMenuItemRequest, MenuItemDto } from "../../../shared/menu";
 import { CompletedOrderDto } from "../../../shared/order";
 import { OrderHistoryItemDto } from "../../../shared/orderHistory";
@@ -35,5 +36,13 @@ export interface ElectronAPI {
 
     receipt: {
         print(orderId: string): Promise<void>;
+    };
+
+    dashboard: {
+        getSummary(): Promise<DashboardSummaryDto>;
+        getPaymentMethodSummary(): Promise<PaymentMethodSummaryDto[]>;
+        getTopSellingItems(): Promise<TopSellingItemDto[]>;
+        getRecentOrders(): Promise<RecentOrderDto[]>;
+        getHourlySales(): Promise<HourlySalesDto[]>;
     }
 }

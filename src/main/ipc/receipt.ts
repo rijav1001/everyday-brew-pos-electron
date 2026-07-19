@@ -1,7 +1,7 @@
 import { ipcMain } from "electron";
 import { ReceiptHtmlBuilder } from "../receipt/ReceiptHtmlBuilder";
 import { ReceiptPrinter } from "../receipt/ReceiptPrinter";
-import { ReceiptService } from "../receipt/ReceiptService";
+import { ReceiptService } from "../services/ReceiptService";
 import { OrderRepository } from "../repositories/OrderRepository";
 
 export function registerReceiptHandlers(): void {

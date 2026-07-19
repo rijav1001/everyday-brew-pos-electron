@@ -76,9 +76,28 @@ if (process.contextIsolated) {
           ipcRenderer.invoke("order:getDetails", id),
       },
 
+      // receipt printing
       receipt: {
         print: (orderId: string) =>
           ipcRenderer.invoke("receipt:print", orderId),
+      },
+
+      // dashboard
+      dashboard: {
+        getSummary: () =>
+          ipcRenderer.invoke("dashboard:getSummary"),
+
+        getPaymentMethodSummary: () =>
+          ipcRenderer.invoke("dashboard:getPaymentMethodSummary"),
+
+        getTopSellingItems: () =>
+          ipcRenderer.invoke("dashboard:getTopSellingItems"),
+
+        getRecentOrders: () =>
+          ipcRenderer.invoke("dashboard:getRecentOrders"),
+
+        getHourlySales: () =>
+          ipcRenderer.invoke("dashboard:getHourlySales"),
       },
     })
   } catch (error) {
