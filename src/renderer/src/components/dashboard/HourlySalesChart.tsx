@@ -35,7 +35,7 @@ export function HourlySalesChart({
                 <CardTitle>Today&apos;s Sales</CardTitle>
             </CardHeader>
 
-            <CardContent className="h-[420px]">
+            <CardContent className="h-105">
                 {data.length === 0 ? (
                     <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
                         No sales today.
