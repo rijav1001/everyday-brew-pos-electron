@@ -3,6 +3,8 @@ import { electronAPI } from '@electron-toolkit/preload'
 import { CategoryDto, CreateCategoryRequest } from '../shared/category'
 import { CreateMenuAddonRequest, CreateMenuItemRequest, MenuAddonDto, MenuItemDto } from '../shared/menu'
 import { CompletedOrderDto } from '../shared/order'
+import { ReportFilterDto } from '../shared/report'
+import { ReportExportDto } from '../shared/reportExport'
 
 // Custom APIs for renderer
 const api = {}
@@ -99,6 +101,29 @@ if (process.contextIsolated) {
         getHourlySales: () =>
           ipcRenderer.invoke("dashboard:getHourlySales"),
       },
+
+      reports: {
+        getReportSummary: (filter: ReportFilterDto) =>
+          ipcRenderer.invoke("reports:getSummary", filter),
+
+        getReportChart: (filter: ReportFilterDto) =>
+            ipcRenderer.invoke("reports:getChart", filter),
+
+        getPaymentBreakdown: (filter: ReportFilterDto) =>
+          ipcRenderer.invoke("reports:getPaymentBreakdown", filter),
+
+        getTopSellingItems: (filter: ReportFilterDto) =>
+          ipcRenderer.invoke("reports:getTopSellingItems", filter),
+
+        getOrderHistory: (filter: ReportFilterDto) =>
+          ipcRenderer.invoke("reports:getOrderHistory", filter),
+
+        saveCsv: (report: ReportExportDto) =>
+          ipcRenderer.invoke("reports:saveCsv", report),
+
+        printReport: () =>
+          ipcRenderer.invoke("reports:printReport"),
+      }
     })
   } catch (error) {
     console.error(error)

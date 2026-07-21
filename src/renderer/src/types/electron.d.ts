@@ -3,6 +3,7 @@ import { DashboardSummaryDto, HourlySalesDto, PaymentMethodSummaryDto, RecentOrd
 import { CreateMenuItemRequest, MenuItemDto } from "../../../shared/menu";
 import { CompletedOrderDto } from "../../../shared/order";
 import { OrderHistoryItemDto } from "../../../shared/orderHistory";
+import { ReportChartDto, ReportFilterDto, ReportSummaryDto } from "../../../shared/report";
 
 export interface ElectronAPI {
     category: {
@@ -44,5 +45,15 @@ export interface ElectronAPI {
         getTopSellingItems(): Promise<TopSellingItemDto[]>;
         getRecentOrders(): Promise<RecentOrderDto[]>;
         getHourlySales(): Promise<HourlySalesDto[]>;
+    };
+
+    reports: {
+        getReportSummary(filter: ReportFilterDto): Promise<ReportSummaryDto>;
+        getReportChart(filter: ReportFilterDto): Promise<ReportChartDto[]>;
+        getPaymentBreakdown(filter: ReportFilterDto): Promise<PaymentBreakdownDto[]>;
+        getTopSellingItems(filter: ReportFilterDto): Promise<TopSellingReportItemDto[]>;
+        getOrderHistory(filter: ReportFilterDto): Promise<OrderHistoryDto[]>;
+        saveCsv(report: ReportExportDto): Promise<void>;
+        printReport(): Promise<void>;
     }
 }

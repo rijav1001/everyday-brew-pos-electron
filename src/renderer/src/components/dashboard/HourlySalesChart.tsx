@@ -16,6 +16,7 @@ import {
     CardHeader,
     CardTitle,
 } from "../ui/card";
+import { formatCurrency } from "src/shared/utils/currency";
 
 interface HourlySalesChartProps {
     hourlySales: HourlySalesDto[];
@@ -54,7 +55,7 @@ export function HourlySalesChart({
 
                             <Tooltip
                                 formatter={(value) => [
-                                    `₹${Number(value).toFixed(2)}`,
+                                    `${formatCurrency(Number(value))}`,
                                     "Sales",
                                 ]}
                             />

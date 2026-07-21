@@ -5,6 +5,7 @@ import { PaymentMethodSummary } from "./PaymentMethodSummary";
 import TopSellingItems from "./TopSellingItems";
 import RecentOrders from "./RecentOrders";
 import { HourlySalesChart } from "./HourlySalesChart";
+import { formatCurrency } from "src/shared/utils/currency";
 
 interface DashboardSummaryProps {
     summary: DashboardSummaryDto;
@@ -28,7 +29,7 @@ export function DashboardSummary({
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <DashboardCard
                     title="Today's Sales"
-                    value={`₹${summary.todaysSales.toFixed(2)}`}
+                    value={`${formatCurrency(summary.todaysSales)}`}
                 />
 
                 <DashboardCard
@@ -38,7 +39,7 @@ export function DashboardSummary({
 
                 <DashboardCard
                     title="Average Bill"
-                    value={`₹${summary.averageOrderValue.toFixed(2)}`}
+                    value={`${formatCurrency(summary.averageOrderValue)}`}
                 />
 
                 <DashboardCard

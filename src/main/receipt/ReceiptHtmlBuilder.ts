@@ -1,4 +1,5 @@
 import type { OrderDetailsDto } from "../../shared/order";
+import { formatCurrency } from "../../shared/utils/currency";
 
 export class ReceiptHtmlBuilder {
 
@@ -21,7 +22,7 @@ export class ReceiptHtmlBuilder {
                     </td>
 
                     <td class="price">
-                        ₹${addon.price.toFixed(2)}
+                        ${formatCurrency(addon.price)}
                     </td>
                 </tr>
             `).join("");
@@ -56,7 +57,7 @@ export class ReceiptHtmlBuilder {
                     </td>
 
                     <td class="price">
-                        ₹${lineTotal.toFixed(2)}
+                        ${formatCurrency(lineTotal)}
                     </td>
 
                 </tr>
@@ -347,7 +348,7 @@ export class ReceiptHtmlBuilder {
                     <td></td>
 
                     <td class="price">
-                        ₹${order.subtotal.toFixed(2)}
+                        ${formatCurrency(order.subtotal)}
                     </td>
 
                 </tr>
@@ -369,7 +370,7 @@ export class ReceiptHtmlBuilder {
                     <td></td>
 
                     <td class="price">
-                        ₹${cgst.toFixed(2)}
+                        ${formatCurrency(cgst)}
                     </td>
 
                 </tr>
@@ -383,7 +384,7 @@ export class ReceiptHtmlBuilder {
                     <td></td>
 
                     <td class="price">
-                        ₹${sgst.toFixed(2)}
+                        ${formatCurrency(sgst)}
                     </td>
 
                 </tr>
@@ -403,7 +404,7 @@ export class ReceiptHtmlBuilder {
                     <td></td>
 
                     <td class="price">
-                        ₹${order.grandTotal.toFixed(2)}
+                        ${formatCurrency(order.grandTotal)}
                     </td>
 
                 </tr>

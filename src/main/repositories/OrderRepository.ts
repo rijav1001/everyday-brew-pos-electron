@@ -1,5 +1,6 @@
 import { CompletedOrderDto, OrderDetailsDto, OrderItemDto } from "../../shared/order";
 import { OrderHistoryItemDto } from "../../shared/orderHistory";
+import { PaymentBreakdownDto, ReportChartDto, ReportSummaryDto, TopSellingReportItemDto } from "../../shared/report";
 import { getDatabase } from "../database/database";
 import { randomUUID } from "node:crypto";
 
@@ -173,5 +174,138 @@ export class OrderRepository {
                 ) as OrderItemDto["addons"],
             })),
         };
+    }
+
+    getReportSummary(startDate: string, endDate: string): ReportSummaryDto {
+        return this.database.prepare(
+            `
+            SELECT
+                IFNULL(SUM(grand_total),0) revenue,
+                COUNT(*) orders,
+                IFNULL(AVG(grand_total),0) averageBill,
+                IFNULL(SUM(gst_amount),0) gst
+            FROM orders
+            WHERE
+                DATE(completed_at)
+                BETWEEN DATE(?) AND DATE(?)
+            `
+        ).get(startDate, endDate) as ReportSummaryDto;
+    }
+
+    getReportChart(startDate: string, endDate: string): ReportChartDto[] {
+        const diff = Math.ceil(
+                (
+                    new Date(endDate).getTime() -
+                    new Date(startDate).getTime()
+                ) / 86400000,
+            );
+
+        if (diff <= 1) {
+            return this.database.prepare(
+                `
+                SELECT
+                    STRFTIME('%H:00', completed_at) label,
+                    SUM(grand_total) revenue,
+                    COUNT(*) orders
+                FROM orders
+                WHERE DATE(completed_at)
+                BETWEEN DATE(?)
+                AND DATE(?)
+                GROUP BY STRFTIME('%H', completed_at)
+                ORDER BY completed_at
+                `,
+            )
+            .all(
+                startDate,
+                endDate,
+            ) as ReportChartDto[];
+        }
+
+        return this.database.prepare(
+            `
+            SELECT
+                STRFTIME('%d-%m', completed_at) label,
+                SUM(grand_total) revenue,
+                COUNT(*) orders
+            FROM orders
+            WHERE DATE(completed_at)
+            BETWEEN DATE(?)
+            AND DATE(?)
+            GROUP BY DATE(completed_at)
+            ORDER BY completed_at
+            `,
+        )
+        .all(
+            startDate,
+            endDate,
+        ) as ReportChartDto[];
+    }
+
+    getPaymentBreakdown(startDate: string, endDate: string): PaymentBreakdownDto[] {
+        return this.database.prepare(
+            `
+            SELECT
+                payment_method paymentMethod,
+                SUM(grand_total) total,
+                COUNT(*) orders
+            FROM orders
+            WHERE DATE(completed_at)
+            BETWEEN DATE(?)
+            AND DATE(?)
+            GROUP BY payment_method
+            ORDER BY total DESC
+            `,
+        )
+        .all(
+            startDate,
+            endDate,
+        ) as PaymentBreakdownDto[];
+    }
+
+    getTopSellingItems(startDate: string, endDate: string): TopSellingReportItemDto[] {
+        return this.database.prepare(
+            `
+            SELECT
+                oi.menu_item_name menuItem,
+                SUM(oi.quantity) quantity,
+                SUM(oi.total_price) revenue
+            FROM order_items oi
+            INNER JOIN orders o
+                ON o.id = oi.order_id
+            WHERE DATE(o.completed_at)
+            BETWEEN DATE(?)
+            AND DATE(?)
+            GROUP BY oi.menu_item_name
+            ORDER BY quantity DESC
+            LIMIT 10
+            `,
+        )
+        .all(
+            startDate,
+            endDate,
+        ) as TopSellingReportItemDto[];
+
+    }
+
+    getOrderHistory(startDate: string, endDate: string): OrderHistoryItemDto[] {
+        return this.database.prepare(
+            `
+            SELECT
+                id,
+                bill_number AS billNumber,
+                grand_total AS grandTotal,
+                payment_method AS paymentMethod,
+                completed_at AS completedAt
+            FROM orders
+            WHERE DATE(completed_at)
+            BETWEEN DATE(?)
+            AND DATE(?)
+            ORDER BY completed_at DESC
+            `
+        )
+        .all(
+            startDate,
+            endDate,
+        ) as OrderHistoryItemDto[];
     }
 }
