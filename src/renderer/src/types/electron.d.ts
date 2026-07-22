@@ -66,5 +66,7 @@ export interface ElectronAPI {
         saveTax(settings: TaxSettingsDto): Promise<void>;
         getApp(): Promise<AppSettingsDto>;
         saveApp(settings: AppSettingsDto): Promise<void>;
+        backupDatabase(): Promise<void>;
+        restoreDatabase(): Promise<void>;
     };
 }

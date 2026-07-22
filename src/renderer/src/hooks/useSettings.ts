@@ -91,6 +91,14 @@ export function useSettings() {
 
     }
 
+    async function backupDatabase() {
+        await settingsService.backupDatabase();
+    }
+
+    async function restoreDatabase() {
+        await settingsService.restoreDatabase();
+    }
+
     return {
         business,
         receipt,
@@ -104,5 +112,7 @@ export function useSettings() {
         saveTax,
         saveApp,
 
+        backupDatabase,
+        restoreDatabase,
     };
 }

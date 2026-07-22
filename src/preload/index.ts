@@ -150,6 +150,12 @@ if (process.contextIsolated) {
 
         saveApp: (settings: AppSettingsDto) =>
           ipcRenderer.invoke("settings:saveApp", settings),
+
+        backupDatabase: () =>
+          ipcRenderer.invoke("settings:backupDatabase"),
+
+        restoreDatabase: () =>
+          ipcRenderer.invoke("settings:restoreDatabase"),
       }
     })
   } catch (error) {

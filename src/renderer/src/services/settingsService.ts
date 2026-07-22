@@ -31,5 +31,13 @@ export const settingsService = {
 
     saveAppSettings(settings: AppSettingsDto) {
         return window.api.settings.saveApp(settings);
+    },
+
+    backupDatabase() {
+        return window.api.settings.backupDatabase();
+    },
+
+    restoreDatabase() {
+        return window.api.settings.restoreDatabase();
     }
 };

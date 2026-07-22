@@ -42,4 +42,14 @@ export function registerSettingsHandlers(settingsService: SettingsService) {
         "settings:saveApp", (_, settings: AppSettingsDto) =>
             settingsService.saveAppSettings(settings),
     );
+
+    ipcMain.handle(
+        "settings:backupDatabase", () =>
+            settingsService.backupDatabase(),
+    );
+
+    ipcMain.handle(
+        "settings:restoreDatabase", () =>
+            settingsService.restoreDatabase(),
+    );
 }

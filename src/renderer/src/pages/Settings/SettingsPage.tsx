@@ -34,7 +34,10 @@ function SettingsPage() {
                 onSave={settings.saveTax}
             />
 
-            <BackupRestoreCard />
+            <BackupRestoreCard
+                onBackup={settings.backupDatabase}
+                onRestore={settings.restoreDatabase}
+            />
 
             <AboutCard />
 

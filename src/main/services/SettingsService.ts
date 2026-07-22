@@ -1,9 +1,11 @@
 import { AppSettingsDto, BusinessSettingsDto, ReceiptSettingsDto, TaxSettingsDto } from "../../shared/settings";
 import { SettingsRepository } from "../repositories/SettingsRepository";
+import { DatabaseService } from "./DatabaseService";
 
 export class SettingsService {
     constructor(
         private readonly repository: SettingsRepository,
+        private readonly databaseService: DatabaseService,
     ) {}
 
     getBusinessSettings(): BusinessSettingsDto {
@@ -36,5 +38,13 @@ export class SettingsService {
 
     saveAppSettings(settings: AppSettingsDto) {
         this.repository.saveAppSettings(settings);
+    }
+
+    async backupDatabase() {
+        await this.databaseService.backupDatabase();
+    }
+
+    async restoreDatabase() {
+        await this.databaseService.restoreDatabase();
     }
 }
