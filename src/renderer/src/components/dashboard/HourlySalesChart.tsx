@@ -16,7 +16,7 @@ import {
     CardHeader,
     CardTitle,
 } from "../ui/card";
-import { formatCurrency } from "src/shared/utils/currency";
+import { formatCurrency } from "../../../../shared/utils/currency";
 
 interface HourlySalesChartProps {
     hourlySales: HourlySalesDto[];

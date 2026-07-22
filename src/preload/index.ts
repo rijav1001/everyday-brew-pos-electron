@@ -5,6 +5,7 @@ import { CreateMenuAddonRequest, CreateMenuItemRequest, MenuAddonDto, MenuItemDt
 import { CompletedOrderDto } from '../shared/order'
 import { ReportFilterDto } from '../shared/report'
 import { ReportExportDto } from '../shared/reportExport'
+import { AppSettingsDto, BusinessSettingsDto, ReceiptSettingsDto, TaxSettingsDto } from '../shared/settings'
 
 // Custom APIs for renderer
 const api = {}
@@ -123,6 +124,32 @@ if (process.contextIsolated) {
 
         printReport: () =>
           ipcRenderer.invoke("reports:printReport"),
+      },
+
+      settings: {
+        getBusiness: () =>
+          ipcRenderer.invoke("settings:getBusiness"),
+
+        saveBusiness: (settings: BusinessSettingsDto) =>
+          ipcRenderer.invoke("settings:saveBusiness", settings),
+
+        getReceipt: () =>
+          ipcRenderer.invoke("settings:getReceipt"),
+
+        saveReceipt: (settings: ReceiptSettingsDto) =>
+          ipcRenderer.invoke("settings:saveReceipt", settings),
+
+        getTax: () =>
+          ipcRenderer.invoke("settings:getTax"),
+
+        saveTax: (settings: TaxSettingsDto) =>
+          ipcRenderer.invoke("settings:saveTax", settings),
+
+        getApp: () =>
+          ipcRenderer.invoke("settings:getApp"),
+
+        saveApp: (settings: AppSettingsDto) =>
+          ipcRenderer.invoke("settings:saveApp", settings),
       }
     })
   } catch (error) {

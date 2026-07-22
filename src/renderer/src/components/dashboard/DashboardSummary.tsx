@@ -5,7 +5,7 @@ import { PaymentMethodSummary } from "./PaymentMethodSummary";
 import TopSellingItems from "./TopSellingItems";
 import RecentOrders from "./RecentOrders";
 import { HourlySalesChart } from "./HourlySalesChart";
-import { formatCurrency } from "src/shared/utils/currency";
+import { formatCurrency } from "../../../../shared/utils/currency";
 
 interface DashboardSummaryProps {
     summary: DashboardSummaryDto;

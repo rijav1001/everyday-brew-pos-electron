@@ -6,11 +6,22 @@ import { registerMenuHandlers } from "./menu";
 import { registerOrderHandlers } from "./order";
 import { registerReceiptHandlers } from "./receipt";
 import { getDatabase } from "../database/database";
+import { registerReportsHandlers } from "./reports";
+import { registerSettingsHandlers } from "./settings";
+import { OrderRepository } from "../repositories/OrderRepository";
+import { ReportsService } from "../services/ReportsService";
+import { SettingsRepository } from "../repositories/SettingsRepository";
+import { SettingsService } from "../services/SettingsService";
 
 export function registerIpcHandlers(): void {
     const database = getDatabase();
     const dashboardRepository = new DashboardRepository(database);
     const dashboardService = new DashboardService(dashboardRepository);
+    const reportsRepository = new OrderRepository();
+    const reportsService = new ReportsService(reportsRepository);
+    const settingsRepository = new SettingsRepository();
+    const settingsService = new SettingsService(settingsRepository);
+
 
     // register ipc handlers here
     registerCategoryHandlers();
@@ -18,4 +29,6 @@ export function registerIpcHandlers(): void {
     registerOrderHandlers();
     registerReceiptHandlers();
     registerDashboardHandlers(dashboardService);
+    registerReportsHandlers(reportsService);
+    registerSettingsHandlers(settingsService);
 }

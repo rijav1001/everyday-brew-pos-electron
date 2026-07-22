@@ -55,5 +55,16 @@ export interface ElectronAPI {
         getOrderHistory(filter: ReportFilterDto): Promise<OrderHistoryDto[]>;
         saveCsv(report: ReportExportDto): Promise<void>;
         printReport(): Promise<void>;
-    }
+    };
+
+    settings: {
+        getBusiness(): Promise<BusinessSettingsDto>;
+        saveBusiness(settings: BusinessSettingsDto): Promise<void>;
+        getReceipt(): Promise<ReceiptSettingsDto>;
+        saveReceipt(settings: ReceiptSettingsDto): Promise<void>;
+        getTax(): Promise<TaxSettingsDto>;
+        saveTax(settings: TaxSettingsDto): Promise<void>;
+        getApp(): Promise<AppSettingsDto>;
+        saveApp(settings: AppSettingsDto): Promise<void>;
+    };
 }
