@@ -266,9 +266,9 @@ export class OrderRepository {
         return this.database.prepare(
             `
             SELECT
-                oi.menu_item_name menuItem,
-                SUM(oi.quantity) quantity,
-                SUM(oi.total_price) revenue
+                oi.menu_item_name AS menuItem,
+                SUM(oi.quantity) AS quantity,
+                SUM(oi.unit_price * oi.quantity) AS revenue
             FROM order_items oi
             INNER JOIN orders o
                 ON o.id = oi.order_id

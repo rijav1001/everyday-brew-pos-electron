@@ -47,7 +47,7 @@ function TaxSettingsCard({
                 <div className="space-y-2">
 
                     <label>
-                        GST Percentage
+                        Default GST %
                     </label>
 
                     <Input
