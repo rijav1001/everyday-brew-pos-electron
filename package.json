@@ -1,5 +1,6 @@
 {
-  "name": "everyday-brew-pos-electron",
+  "name": "everyday-brew-pos",
+  "productName": "Everyday Brew POS",
   "displayName": "Everyday Brew POS",
   "version": "1.0.0",
   "description": "A POS app for cafe operations like ordering, menu customization and more",

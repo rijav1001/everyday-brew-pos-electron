@@ -12,6 +12,7 @@ import { OrderRepository } from "../repositories/OrderRepository";
 import { ReportsService } from "../services/ReportsService";
 import { SettingsRepository } from "../repositories/SettingsRepository";
 import { SettingsService } from "../services/SettingsService";
+import { DatabaseService } from "../services/DatabaseService";
 
 export function registerIpcHandlers(): void {
     const database = getDatabase();
@@ -20,7 +21,8 @@ export function registerIpcHandlers(): void {
     const reportsRepository = new OrderRepository();
     const reportsService = new ReportsService(reportsRepository);
     const settingsRepository = new SettingsRepository();
-    const settingsService = new SettingsService(settingsRepository);
+    const databaseService = new DatabaseService();
+    const settingsService = new SettingsService(settingsRepository, databaseService);
 
 
     // register ipc handlers here

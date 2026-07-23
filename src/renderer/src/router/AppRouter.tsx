@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, HashRouter } from "react-router-dom";
 
 import MainLayout from "@renderer/layouts/MainLayout";
 
@@ -10,8 +10,13 @@ import SettingsPage from "@renderer/pages/Settings/SettingsPage";
 // import OrderHistoryPage from "@renderer/pages/Orders/History/OrderHistoryPage";
 
 function AppRouter() {
+
+  const Router = window.electron
+    ? HashRouter
+    : BrowserRouter;
+
   return (
-    <BrowserRouter>
+    <Router>
       <Routes>
         <Route path="/" element={<Navigate to="/orders" replace />} />
         <Route element={<MainLayout />}>
@@ -23,8 +28,8 @@ function AppRouter() {
           <Route path="/settings" element={<SettingsPage />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </Router>
   )
 }
 
-export default AppRouter
+export default AppRouter;

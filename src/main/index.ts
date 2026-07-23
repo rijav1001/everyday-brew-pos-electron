@@ -8,6 +8,7 @@ import { registerIpcHandlers } from './ipc'
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
+    title: "Everyday Brew POS",
     width: 1440,
     height: 900,
     minWidth: 1366,

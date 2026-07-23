@@ -1,7 +1,7 @@
 import { OrderRepository } from "../repositories/OrderRepository";
 
-import { ReceiptHtmlBuilder } from "./ReceiptHtmlBuilder";
-import { ReceiptPrinter } from "./ReceiptPrinter";
+import { ReceiptHtmlBuilder } from "../receipt/ReceiptHtmlBuilder";
+import { ReceiptPrinter } from "../receipt/ReceiptPrinter";
 
 export class ReceiptService {
 
