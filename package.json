@@ -1,9 +1,10 @@
 {
   "name": "everyday-brew-pos-electron",
+  "displayName": "Everyday Brew POS",
   "version": "1.0.0",
-  "description": "An Electron application with React and TypeScript",
+  "description": "A POS app for cafe operations like ordering, menu customization and more",
   "main": "./out/main/index.js",
-  "author": "example.com",
+  "author": "Rijav Umrania",
   "homepage": "https://electron-vite.org",
   "scripts": {
     "format": "prettier --write .",
