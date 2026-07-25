@@ -1,9 +1,7 @@
 import { format } from "date-fns";
-import { Eye } from "lucide-react";
 
 import { OrderHistoryItemDto } from "src/shared/orderHistory";
 
-import { Button } from "../ui/button";
 import {
     Card,
     CardContent,
@@ -18,6 +16,8 @@ import {
     TableHeader,
     TableRow,
 } from "../ui/table";
+import { Button } from "../ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface OrderHistoryTableProps {
     orders: OrderHistoryItemDto[];
@@ -26,6 +26,8 @@ interface OrderHistoryTableProps {
 function OrderHistoryTable({
     orders,
 }: OrderHistoryTableProps) {
+    
+    const navigate = useNavigate();
 
     return (
         <Card>
@@ -121,17 +123,6 @@ function OrderHistoryTable({
                                             ₹{order.grandTotal.toFixed(2)}
                                         </TableCell>
 
-                                        <TableCell>
-
-                                            <Button
-                                                size="icon"
-                                                variant="ghost"
-                                            >
-                                                <Eye className="h-4 w-4" />
-                                            </Button>
-
-                                        </TableCell>
-
                                     </TableRow>
 
                                 );
@@ -141,6 +132,16 @@ function OrderHistoryTable({
                     </TableBody>
 
                 </Table>
+
+                <div className="flex justify-end">
+                    <Button
+                        className="cursor-pointer"
+                        variant="outline"
+                        onClick={() => navigate("/reports/orders/history")}    
+                    >
+                        See Detailed Order History
+                    </Button>
+                </div>
 
             </CardContent>
 

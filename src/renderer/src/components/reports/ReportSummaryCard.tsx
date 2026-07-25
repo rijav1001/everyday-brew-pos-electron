@@ -1,4 +1,4 @@
-import { IndianRupee, ReceiptText, ShoppingCart, Percent } from "lucide-react";
+import { IndianRupee, ReceiptText, ShoppingCart } from "lucide-react";
 
 import { ReportSummaryDto } from "src/shared/report";
 
@@ -41,7 +41,7 @@ function ReportSummaryCard({
             <SummaryCard
                 title="GST Collected"
                 value={`${formatCurrency(gst)}`}
-                icon={<Percent className="h-5 w-5" />}
+                icon={<IndianRupee className="h-5 w-5" />}
             />
 
         </div>

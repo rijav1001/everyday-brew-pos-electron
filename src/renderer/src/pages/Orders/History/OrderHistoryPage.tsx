@@ -1,10 +1,13 @@
 import { useOrderHistory } from "@renderer/hooks/useOrderHistory";
 import { useState } from "react";
 import OrderDetailsDialog from "./OrderDetailsDialog";
+import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function OrderHistoryPage() {
     const { orders, loading, selectedOrder, loadOrderDetails } = useOrderHistory();
     const [dialogOpen, setDialogOpen] = useState(false);
+    const navigate = useNavigate();
 
     if (loading) {
         return (
@@ -17,9 +20,16 @@ function OrderHistoryPage() {
     return (
         <div className="space-y-4">
 
-            <h1 className="text-2xl font-semibold">
-                Order History
-            </h1>
+            <div className="mb-6 flex items-center gap-2">
+                <ArrowLeft 
+                    className="h-5 w-5 cursor-pointer text-muted-foreground transition-colors hover:text-foreground"
+                    onClick={() => navigate("/reports")}
+                />
+
+                <h1 className="text-2xl font-semibold">
+                    Order History
+                </h1>
+            </div>
 
             {orders.map(order => (
                 <div

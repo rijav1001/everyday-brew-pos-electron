@@ -37,13 +37,8 @@ export class ReceiptHtmlBuilder {
                 `
                 : "";
 
-            const addonsTotal = item.addons.reduce(
-                (sum, addon) => sum + addon.price,
-                0,
-            );
-
             const lineTotal =
-                (item.unitPrice + addonsTotal) * item.quantity;
+                item.unitPrice * item.quantity;
 
             return `
                 <tr class="item-row">

@@ -78,7 +78,7 @@ export class ReportsService {
             .getFocusedWindow()
             ?.webContents.print({
 
-                silent: false,
+                silent: true,
 
                 printBackground: true,
 

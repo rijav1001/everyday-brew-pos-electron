@@ -77,9 +77,9 @@ function OrderDetailsDialog({
 
                     <div className="space-y-4">
 
-                        {order.items.map(item => (
+                        {order.items.map((item, index) => (
                             <div
-                                key={`${item.menuItemName}-${item.notes}`}
+                                key={`${item.menuItemName}-${index}`}
                                 className="rounded-lg border p-3"
                             >
 

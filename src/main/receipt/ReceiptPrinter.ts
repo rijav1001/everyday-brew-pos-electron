@@ -22,7 +22,7 @@ export class ReceiptPrinter {
 
                 window.webContents.print(
                     {
-                        silent: false,
+                        silent: true,
                         printBackground: true,
                         color: false,
                         margins: {
