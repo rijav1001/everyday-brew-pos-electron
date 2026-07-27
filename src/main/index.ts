@@ -1,7 +1,8 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+import icon from '../../build/icon.ico?asset'
+// import everydayBrewLogo from '../../resources/everydayBrewLogo.png'
 import { initializeDatabase } from './database/schema'
 import { registerIpcHandlers } from './ipc'
 
@@ -9,13 +10,13 @@ function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     title: "Everyday Brew POS",
+    icon,
     width: 1440,
     height: 900,
     minWidth: 1366,
     minHeight: 800,
     show: false,
     autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
@@ -45,7 +46,7 @@ function createWindow(): void {
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   // Set app user model id for windows
-  electronApp.setAppUserModelId('com.electron');
+  electronApp.setAppUserModelId('com.everydaybrew.pos');
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.

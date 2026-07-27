@@ -1,5 +1,5 @@
-appId: com.electron.app
-productName: everyday-brew-pos-electron
+appId: com.everydaybrew.pos
+productName: Everyday Brew POS
 directories:
   buildResources: build
 files:
@@ -12,7 +12,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: everyday-brew-pos-electron
+  executableName: everyday-brew-pos
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}
