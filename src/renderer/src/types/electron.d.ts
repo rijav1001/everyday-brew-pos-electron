@@ -33,6 +33,11 @@ export interface ElectronAPI {
         save(order: CompletedOrderDto): Promise<string>;
         getHistory(): Promise<OrderHistoryItemDto[]>;
         getDetails(id: string): Promise<OrderDetailsDto>;
+        create(dto: CreateOrderDto): Promise<string>;
+        getActiveOrders(): Promise<OrderHistoryItemDto[]>;
+        addItem(orderId: string, item: OrderItemDto): Promise<void>;
+        updateItem(itemId: string, item: OrderItemDto): Promise<void>;
+        removeItem(itemId: string): Promise<void>;
     };
 
     receipt: {

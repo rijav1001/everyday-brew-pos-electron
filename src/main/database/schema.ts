@@ -1,5 +1,6 @@
 import { getDatabase } from "./database";
 import { seedDatabase } from "./seed";
+// import { runMigrations } from "./migrations";
 
 export function initializeDatabase(): void {
     const db = getDatabase();
@@ -50,7 +51,11 @@ export function initializeDatabase(): void {
 
             payment_method TEXT NOT NULL,
 
-            completed_at TEXT NOT NULL
+            completed_at TEXT,
+
+            order_type TEXT NOT NULL DEFAULT 'TAKEAWAY',
+            table_number INTEGER,
+            status TEXT NOT NULL DEFAULT 'ACTIVE'
         );
 
         CREATE TABLE IF NOT EXISTS order_items (
@@ -87,6 +92,8 @@ export function initializeDatabase(): void {
     `);
 
     console.log("✅ SQLite initialized");
+
+    // runMigrations(db);
 
     seedDatabase();
 }

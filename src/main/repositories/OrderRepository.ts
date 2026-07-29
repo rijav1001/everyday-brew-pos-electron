@@ -1,4 +1,5 @@
-import { CompletedOrderDto, OrderDetailsDto, OrderItemDto } from "../../shared/order";
+import { OrderStatus } from "../../shared/enums";
+import { CompletedOrderDto, CreateOrderDto, OrderHeaderDto } from "../../shared/order";
 import { OrderHistoryItemDto } from "../../shared/orderHistory";
 import { PaymentBreakdownDto, ReportChartDto, ReportSummaryDto, TopSellingReportItemDto } from "../../shared/report";
 import { getDatabase } from "../database/database";
@@ -21,27 +22,20 @@ export class OrderRepository {
         VALUES (?, ?, ?, ?, ?, ?, ?)
     `);
 
-    private readonly insertOrderItemStatement = this.database.prepare(`
-        INSERT INTO order_items (
+    private readonly createActiveOrderStatement = this.database.prepare(`
+        INSERT INTO orders (
             id,
-            order_id,
-            menu_item_name,
-            unit_price,
-            gst_rate,
-            quantity,
-            notes
+            bill_number,
+            subtotal,
+            gst_amount,
+            grand_total,
+            payment_method,
+            completed_at,
+            order_type,
+            table_number,
+            status
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    `);
-
-    private readonly insertOrderItemAddonStatement = this.database.prepare(`
-        INSERT INTO order_item_addons (
-            id,
-            order_item_id,
-            addon_name,
-            price
-        )
-        VALUES (?, ?, ?, ?)
+        VALUES (?, ?, 0, 0, 0, '', NULL, ?, ?, ?)
     `);
 
     // order history statements
@@ -51,7 +45,10 @@ export class OrderRepository {
             bill_number AS billNumber,
             grand_total AS grandTotal,
             payment_method AS paymentMethod,
-            completed_at AS completedAt
+            completed_at AS completedAt,
+            order_type AS orderType,
+            table_number AS tableNumber,
+            status
         FROM orders
         ORDER BY completed_at DESC
     `);
@@ -64,29 +61,25 @@ export class OrderRepository {
             gst_amount AS gstAmount,
             grand_total AS grandTotal,
             payment_method AS paymentMethod,
-            completed_at AS completedAt
+            completed_at AS completedAt,
+            order_type AS orderType,
+            table_number AS tableNumber,
+            status
         FROM orders
         WHERE id = ?
     `);
 
-    private readonly getOrderItemsStatement = this.database.prepare(`
+    private readonly getActiveOrdersStatement = this.database.prepare(`
         SELECT
             id,
-            menu_item_name AS menuItemName,
-            unit_price AS unitPrice,
-            gst_rate AS gstRate,
-            quantity,
-            notes
-        FROM order_items
-        WHERE order_id = ?
-    `);
-
-    private readonly getOrderItemAddonsStatement = this.database.prepare(`
-        SELECT
-            addon_name AS name,
-            price
-        FROM order_item_addons
-        WHERE order_item_id = ?
+            bill_number AS billNumber,
+            grand_total AS grandTotal,
+            order_type AS orderType,
+            table_number AS tableNumber,
+            status
+        FROM orders
+        WHERE status = ?
+        ORDER BY bill_number
     `);
 
     getNextBillNumber(): string {
@@ -106,48 +99,41 @@ export class OrderRepository {
         return `EB${next.toString().padStart(6, "0")}`;
     }
 
+    createActiveOrder(order: CreateOrderDto): string {
+        const id = randomUUID();
+
+        const billNumber = this.getNextBillNumber();
+
+        this.createActiveOrderStatement.run(
+            id,
+            billNumber,
+            order.orderType,
+            order.tableNumber,
+            OrderStatus.ACTIVE,
+        );
+
+        return id;
+    }
+
+    getActiveOrders(): OrderHistoryItemDto[] {
+        return this.getActiveOrdersStatement.all(
+            OrderStatus.ACTIVE,
+        ) as OrderHistoryItemDto[];
+    }
+
     saveOrder(order: CompletedOrderDto): string {
         const orderId = randomUUID();
         const billNumber = this.getNextBillNumber();
 
-        const transaction = this.database.transaction(
-            (completedOrder: CompletedOrderDto) => {
-                this.insertOrderStatement.run(
-                    orderId,
-                    billNumber,
-                    completedOrder.subtotal,
-                    completedOrder.gstAmount,
-                    completedOrder.grandTotal,
-                    completedOrder.paymentMethod,
-                    completedOrder.completedAt
-                );
-
-                for (const item of completedOrder.items) {
-                    const orderItemId = randomUUID();
-
-                    this.insertOrderItemStatement.run(
-                        orderItemId,
-                        orderId,
-                        item.menuItemName,
-                        item.unitPrice,
-                        item.gstRate,
-                        item.quantity,
-                        item.notes,
-                    );
-
-                    for (const addon of item.addons) {
-                        this.insertOrderItemAddonStatement.run(
-                            randomUUID(),
-                            orderItemId,
-                            addon.name,
-                            addon.price,
-                        );
-                    }
-                }
-            }
+        this.insertOrderStatement.run(
+            orderId,
+            billNumber,
+            order.subtotal,
+            order.gstAmount,
+            order.grandTotal,
+            order.paymentMethod,
+            order.completedAt,
         );
-
-        transaction(order);
 
         return orderId;
     }
@@ -156,24 +142,8 @@ export class OrderRepository {
         return this.getOrderHistoryStatement.all() as OrderHistoryItemDto[];
     }
 
-    getDetails(id: string): OrderDetailsDto {
-        const order = this.getOrderStatement.get(id) as Omit<OrderDetailsDto, "items">;
-
-        const items = this.getOrderItemsStatement.all(id) as Array<OrderItemDto & { id: string }>;
-
-        return {
-            ...order,
-            items: items.map(item => ({
-                menuItemName: item.menuItemName,
-                unitPrice: item.unitPrice,
-                gstRate: item.gstRate,
-                quantity: item.quantity,
-                notes: item.notes,
-                addons: this.getOrderItemAddonsStatement.all(
-                    item.id,
-                ) as OrderItemDto["addons"],
-            })),
-        };
+    getOrder(id: string): OrderHeaderDto {
+        return this.getOrderStatement.get(id) as OrderHeaderDto;
     }
 
     getReportSummary(startDate: string, endDate: string): ReportSummaryDto {
@@ -295,7 +265,10 @@ export class OrderRepository {
                 bill_number AS billNumber,
                 grand_total AS grandTotal,
                 payment_method AS paymentMethod,
-                completed_at AS completedAt
+                completed_at AS completedAt,
+                order_type AS orderType,
+                table_number AS tableNumber,
+                status
             FROM orders
             WHERE DATE(completed_at)
             BETWEEN DATE(?)

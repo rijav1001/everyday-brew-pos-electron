@@ -1,4 +1,4 @@
-import { CompletedOrderDto, OrderDetailsDto } from "src/shared/order";
+import { CompletedOrderDto, CreateOrderDto, OrderDetailsDto, OrderItemDto } from "src/shared/order";
 import { OrderHistoryItemDto } from "src/shared/orderHistory";
 
 export const orderService = {
@@ -16,5 +16,25 @@ export const orderService = {
 
     getDetails(id: string) {
         return window.api.order.getDetails(id) as Promise<OrderDetailsDto>;
-    }
+    },
+
+    create(dto: CreateOrderDto) {
+        return window.api.order.create(dto) as Promise<string>;
+    },
+
+    getActiveOrders() {
+        return window.api.order.getActiveOrders() as Promise<OrderHistoryItemDto[]>;
+    },
+
+    addItem(orderId: string, item: OrderItemDto) {
+        return window.api.order.addItem(orderId, item) as Promise<void>;
+    },
+
+    updateItem(itemId: string, item: OrderItemDto) {
+        return window.api.order.updateItem(itemId, item) as Promise<void>;
+    },
+
+    removeItem(itemId: string) {
+        return window.api.order.removeItem(itemId) as Promise<void>;
+    },
 };

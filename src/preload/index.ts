@@ -2,10 +2,11 @@ import { contextBridge,ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 import { CategoryDto, CreateCategoryRequest } from '../shared/category'
 import { CreateMenuAddonRequest, CreateMenuItemRequest, MenuAddonDto, MenuItemDto } from '../shared/menu'
-import { CompletedOrderDto } from '../shared/order'
+import { CompletedOrderDto, CreateOrderDto, OrderItemDto } from '../shared/order'
 import { ReportFilterDto } from '../shared/report'
 import { ReportExportDto } from '../shared/reportExport'
 import { AppSettingsDto, BusinessSettingsDto, ReceiptSettingsDto, TaxSettingsDto } from '../shared/settings'
+import { OrderHistoryItemDto } from '../shared/orderHistory'
 
 // Custom APIs for renderer
 const api = {}
@@ -77,6 +78,21 @@ if (process.contextIsolated) {
 
         getDetails: (id: string) =>
           ipcRenderer.invoke("order:getDetails", id),
+
+        create: (dto: CreateOrderDto) =>
+          ipcRenderer.invoke("order:create", dto),
+
+        getActiveOrders: (): Promise<OrderHistoryItemDto[]> =>
+          ipcRenderer.invoke("order:getActiveOrders"),
+
+        addItem: (orderId: string, item: OrderItemDto) =>
+          ipcRenderer.invoke("order:addItem", orderId, item),
+
+        updateItem: (itemId: string, item: OrderItemDto) =>
+          ipcRenderer.invoke("order:updateItem", itemId, item),
+
+        removeItem: (itemId: string) =>
+          ipcRenderer.invoke("order:removeItem", itemId),
       },
 
       // receipt printing

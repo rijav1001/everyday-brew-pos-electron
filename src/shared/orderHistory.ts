@@ -1,3 +1,4 @@
+import { OrderStatus, OrderType } from "./enums";
 import { PaymentMethod } from "./payment";
 
 export interface OrderHistoryItemDto {
@@ -9,4 +10,8 @@ export interface OrderHistoryItemDto {
     paymentMethod: PaymentMethod;
 
     completedAt: string;
+
+    orderType: OrderType;
+    tableNumber: number | null;
+    status: OrderStatus;
 }

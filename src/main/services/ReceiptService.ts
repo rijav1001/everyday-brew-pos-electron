@@ -1,19 +1,18 @@
-import { OrderRepository } from "../repositories/OrderRepository";
-
 import { ReceiptHtmlBuilder } from "../receipt/ReceiptHtmlBuilder";
 import { ReceiptPrinter } from "../receipt/ReceiptPrinter";
+import { OrderService } from "./OrderService";
 
 export class ReceiptService {
 
     constructor(
-        private readonly orderRepository: OrderRepository,
+        private readonly orderService: OrderService,
         private readonly receiptHtmlBuilder: ReceiptHtmlBuilder,
         private readonly receiptPrinter: ReceiptPrinter,
     ) {}
 
     async print(orderId: string): Promise<void> {
 
-        const order = this.orderRepository.getDetails(orderId);
+        const order = this.orderService.getOrderDetails(orderId);
 
         if (!order) {
             throw new Error(`Order not found: ${orderId}`);

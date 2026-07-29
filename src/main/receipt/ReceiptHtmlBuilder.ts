@@ -275,7 +275,7 @@ export class ReceiptHtmlBuilder {
                     <td>Date</td>
 
                     <td colspan="2" class="price">
-                        ${new Date(order.completedAt).toLocaleString()}
+                        ${new Date(order.completedAt!).toLocaleString()}
                     </td>
 
                 </tr>

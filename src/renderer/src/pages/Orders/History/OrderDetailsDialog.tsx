@@ -58,16 +58,18 @@ function OrderDetailsDialog({
                                 {order.paymentMethod}
                             </span>
                         </div>
+                        
+                        {order.completedAt && (
+                            <div className="flex justify-between">
+                                <span className="text-muted-foreground">
+                                    Date
+                                </span>
 
-                        <div className="flex justify-between">
-                            <span className="text-muted-foreground">
-                                Date
-                            </span>
-
-                            <span>
-                                {new Date(order.completedAt).toLocaleString()}
-                            </span>
-                        </div>
+                                <span>
+                                    {new Date(order.completedAt).toLocaleString()}
+                                </span>
+                            </div>
+                        )}
 
                     </div>
 
