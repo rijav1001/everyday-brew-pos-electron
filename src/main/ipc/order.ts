@@ -52,4 +52,9 @@ export function registerOrderHandlers(): void {
         "order:removeItem", (_event, itemId) =>
             orderService.removeItem(itemId),
     );
+
+    ipcMain.handle(
+        "order:delete", (_event, orderId) =>
+            orderService.deleteOrder(orderId),
+    );
 }

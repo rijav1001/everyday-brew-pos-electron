@@ -8,6 +8,11 @@ export class OrderService {
     private readonly orderItemRepository = new OrderItemRepository();
 
     createActiveOrder(order: CreateOrderDto): string {
+        const existing = this.orderRepository.getEmptyActiveOrder();
+        if (existing) {
+            return existing.id;
+        }
+
         return this.orderRepository.createActiveOrder(order);
     }
 
@@ -35,5 +40,9 @@ export class OrderService {
 
     removeItem(itemId: string): void {
         this.orderItemRepository.removeItem(itemId);
+    }
+
+    deleteOrder(orderId: string): void {
+        this.orderRepository.deleteOrder(orderId);
     }
 }

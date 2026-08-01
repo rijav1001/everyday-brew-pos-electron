@@ -38,6 +38,7 @@ export interface ElectronAPI {
         addItem(orderId: string, item: OrderItemDto): Promise<void>;
         updateItem(itemId: string, item: OrderItemDto): Promise<void>;
         removeItem(itemId: string): Promise<void>;
+        deleteOrder(orderId: string): Promise<void>;
     };
 
     receipt: {

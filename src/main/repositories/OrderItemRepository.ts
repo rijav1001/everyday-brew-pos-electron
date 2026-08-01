@@ -1,4 +1,5 @@
 import { OrderItemDto } from "../../shared/order";
+import { areAddonsEqual, normalizeNotes } from "../../shared/utils/orderUtils";
 import { getDatabase } from "../database/database";
 import { randomUUID } from "node:crypto";
 
@@ -124,32 +125,50 @@ export class OrderItemRepository {
     `);
     
     addItem(orderId: string, item: OrderItemDto): void {
-        const transaction = this.database.transaction(() => {
-            const orderItemId = randomUUID();
+        const normalizedNotes = normalizeNotes(item.notes);
 
-            this.insertOrderItemStatement.run(
-                orderItemId,
-                orderId,
-                item.menuItemName,
-                item.unitPrice,
-                item.gstRate,
-                item.quantity,
-                item.notes,
+        const existingItems = this.getItems(orderId);
+
+        const existingItem = existingItems.find(existing =>
+            existing.menuItemName === item.menuItemName &&
+            normalizeNotes(existing.notes) === normalizedNotes &&
+            areAddonsEqual(existing.addons, item.addons)
+        );
+
+        if (existingItem) {
+            this.updateItem(
+                existingItem.id!,
+                {
+                    ...existingItem,
+                    quantity: existingItem.quantity + item.quantity,
+                }
             );
 
-            for (const addon of item.addons) {
-                this.insertOrderItemAddonStatement.run(
-                    randomUUID(),
-                    orderItemId,
-                    addon.name,
-                    addon.price,
-                );
-            }
+            return;
+        }
 
-            this.recalculateTotals(orderId);
-        });
+        const orderItemId = randomUUID();
 
-        transaction();
+        this.insertOrderItemStatement.run(
+            orderItemId,
+            orderId,
+            item.menuItemName,
+            item.unitPrice,
+            item.gstRate,
+            item.quantity,
+            normalizedNotes,
+        );
+        
+        for (const addon of item.addons) {
+            this.insertOrderItemAddonStatement.run(
+                randomUUID(),
+                orderItemId,
+                addon.name,
+                addon.price,
+            );
+        }
+
+        this.recalculateTotals(orderId);
     }
 
     updateItem(itemId: string, item: OrderItemDto): void {
@@ -206,6 +225,7 @@ export class OrderItemRepository {
         const items = this.getOrderItemsStatement.all(orderId) as Array<OrderItemDto & { id: string }>;
 
         return items.map(item => ({
+            id: item.id,
             menuItemName: item.menuItemName,
             unitPrice: item.unitPrice,
             gstRate: item.gstRate,

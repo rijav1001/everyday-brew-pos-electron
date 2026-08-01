@@ -93,6 +93,9 @@ if (process.contextIsolated) {
 
         removeItem: (itemId: string) =>
           ipcRenderer.invoke("order:removeItem", itemId),
+
+        deleteOrder: (orderId: string) =>
+          ipcRenderer.invoke("order:delete", orderId),
       },
 
       // receipt printing

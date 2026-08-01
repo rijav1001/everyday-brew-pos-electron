@@ -5,8 +5,10 @@
     "src/main/**/*", 
     "src/preload/**/*", 
     "src/shared/**/*", 
-    "src/renderer/src/**/*.d.ts"
-, "src/renderer/src/constants/categoryIcons.ts"  ],
+    "src/renderer/src/**/*.d.ts",
+    "src/renderer/src/constants/categoryIcons.ts",
+    "src/renderer/src/types/*"  
+  ],
   "compilerOptions": {
     "composite": true,
     "types": ["electron-vite/node"]

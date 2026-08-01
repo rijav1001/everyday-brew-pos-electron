@@ -1,23 +1,28 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-fallthrough */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/set-state-in-effect */
+ /* eslint-disable no-fallthrough */
 import PageHeader from "@renderer/components/shared/PageHeader";
 import OrdersLayout from "@renderer/components/orders/OrdersLayout";
 import CustomizeDrinkDialog from "@renderer/components/orders/CustomizeDrinkDialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMenu } from "@renderer/hooks/useMenu";
 import { MenuItem, MenuAddon } from "@renderer/types/menu";
 import { PaymentMethod } from "@renderer/types/payment";
-import { areAddonsEqual, formatNotes, normalizeNotes } from "@renderer/utils/order";
 import { calculateBillingSummary } from "@renderer/utils/billing";
 import { isSplitPaymentValid } from "@renderer/utils/payment";
 import { OrderItem } from "@renderer/types/order";
 import { orderService } from "@renderer/services/orderService";
-import { mapCompletedOrder } from "@renderer/mappers/orderMapper";
+import { mapCompletedOrder, mapOrderItem, mapOrderItemDto } from "@renderer/mappers/orderMapper";
 import { receiptService } from "@renderer/services/receiptService";
 import { toast } from "sonner";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function OrdersPage() {
+    const navigate = useNavigate();
+    const location = useLocation();
+
     const { categories, menuItems, selectedCategory, setSelectedCategory } = useMenu();
+    const [activeOrderId, setActiveOrderId] = useState<string | null>(null);
     const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
     const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
     const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItem | null>(null);
@@ -26,106 +31,121 @@ function OrdersPage() {
     const [splitCash, setSplitCash] = useState<number | null>(null);
     const [splitUpi, setSplitUpi] = useState<number | null>(null);
     const [printReceipt, setPrintReceipt] = useState(true);
-    const [isCompletingOrder, setIsCompletingOrder] = useState(false);
+    const [isCompletingOrder, setIsCompletingOrder] = useState(false);    
 
-    function handleIncreaseQuantity(menuItem: MenuItem) {
-        console.log(Object.keys(menuItem));
-        console.log(menuItem.addOns);
-        console.log((menuItem as any).addons);
+    async function loadOrder(orderId: string) {
+        const details = await orderService.getDetails(orderId);
+        setOrderItems(details.items.map(item => mapOrderItem(item, menuItems)));
+    }
+
+    useEffect(() => {
+        const orderId = location.state?.orderId as string | undefined;
+
+        if (!orderId) {
+            return;
+        }
+
+        setActiveOrderId(orderId);
+        loadOrder(orderId);
+    }, [location.state, menuItems]);
+
+    async function addMenuItemToOrder(orderId: string, menuItem: MenuItem) {
+        const existing = orderItems.find(item => 
+            item.menuItem.name === menuItem.name && 
+            item.selectedAddons.length === 0 &&
+            item.normalizedNotes === ""
+        );
+
         if (menuItem.addOns.length > 0) {
             setSelectedMenuItem(menuItem);
             setCustomizeDialogOpen(true);
             return;
         }
 
-        setOrderItems((previous) => {
-            const existing = previous.find(
-                (item) => 
-                    item.menuItem.id === menuItem.id &&
-                    item.selectedAddons.length === 0 &&
-                    item.notes === ""
+        if (existing) {
+            await orderService.updateItem(
+                existing.id!,
+                mapOrderItemDto({
+                    ...existing,
+                    quantity: existing.quantity + 1,
+                }),
             );
-
-            if (existing) {
-                return previous.map((item) =>
-                    item.menuItem.id === menuItem.id &&
-                    item.selectedAddons.length === 0 &&
-                    item.notes === ""
-                    ? {
-                        ...item,
-                        quantity: item.quantity + 1,
-                    }
-                    : item
-                );
-            }
-
-            return [
-                ...previous,
+        } else {
+            await orderService.addItem(
+                orderId,
                 {
-                    menuItem,
+                    menuItemName: menuItem.name,
+                    unitPrice: menuItem.displayPrice,
+                    gstRate: menuItem.gstRate,
                     quantity: 1,
-                    selectedAddons: [],
                     notes: "",
-                    normalizedNotes: "",
+                    addons: [],
                 },
-            ];
-        });
+            );
+        }
+
+        await loadOrder(orderId);
     }
 
-    function handleDecreaseQuantity(itemId: string) {
-        setOrderItems(pre => 
-            pre.map(item =>
-                item.menuItem.id === itemId
-                ? {
+    async function handleIncreaseQuantity(menuItem: MenuItem) {
+        const orderId = activeOrderId;
+
+        if (!orderId) {
+            return;
+        }
+        
+        await addMenuItemToOrder(orderId, menuItem);
+    }
+
+    async function handleDecreaseQuantity(itemId: string) {
+        if (!activeOrderId) {
+            toast.error("No active order. Please create an order first.");
+            return;
+        }
+
+        const item = orderItems.find(item => item.menuItem.id === itemId);
+
+        if (!item || !item.id) {
+            return;
+        }
+
+        if (item.quantity > 1) {
+            await orderService.updateItem(
+                item.id,
+                mapOrderItemDto({
                     ...item,
                     quantity: item.quantity - 1,
-                }
-                : item
-            )
-            .filter(item => item.quantity > 0)
-        );
-    }
-
-    function handleAddCustomizedItem(addons: MenuAddon[], notes: string) {
-        if (!selectedMenuItem) return;
-
-        const normalizedNotes = normalizeNotes(notes);
-
-        setOrderItems(previous => {
-            const existing = previous.find(item =>
-                item.menuItem.id === selectedMenuItem.id &&
-
-                areAddonsEqual(
-                    item.selectedAddons,
-                    addons,
-                ) && item.notes === normalizedNotes
+                }),
             );
+        } else {
+            await orderService.removeItem(item.id);
+        }
 
-            if (existing) {
-                return previous.map(item =>
-                    item === existing
-                        ? {
-                            ...item,
-                            quantity: item.quantity + 1,
-                        }
-                        : item
-                );
-            }
-
-            return [
-                ...previous,
-                {
-                    menuItem: selectedMenuItem,
-                    quantity: 1,
-                    selectedAddons: addons,
-                    notes: formatNotes(notes),
-                    normalizedNotes,
-                },
-            ];
-        });
+        await loadOrder(activeOrderId);
     }
 
-    const billing = calculateBillingSummary(orderItems);
+    async function handleAddCustomizedItem(addons: MenuAddon[], notes: string) {
+        if (!selectedMenuItem || !activeOrderId) return;
+
+        await orderService.addItem(
+            activeOrderId,
+            {
+                menuItemName: selectedMenuItem.name,
+                unitPrice: selectedMenuItem.displayPrice,
+                gstRate: selectedMenuItem.gstRate,
+                quantity: 1,
+                notes,
+                addons: addons.map(addon => ({
+                    name: addon.name,
+                    price: addon.price,
+                })),
+            },
+        );
+
+        await loadOrder(activeOrderId);
+    }
+
+    const billing = calculateBillingSummary(orderItems); // Temporary
 
     const isPaymentValid = (() => {
 
@@ -186,10 +206,13 @@ function OrdersPage() {
 
             // Reset state
             setOrderItems([]);
+            setActiveOrderId(null);
             setPaymentMethod("cash");
             setCashReceived(null);
             setSplitCash(null);
             setSplitUpi(null);
+
+            navigate("/active-orders");
         } catch (error) {
             console.error(error);
         } finally {
@@ -230,6 +253,7 @@ function OrdersPage() {
                     onOpenChange={setCustomizeDialogOpen}
                     onConfirm={handleAddCustomizedItem}
                 />
+
             </div>
         </div>
     );

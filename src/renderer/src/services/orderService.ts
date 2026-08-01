@@ -37,4 +37,8 @@ export const orderService = {
     removeItem(itemId: string) {
         return window.api.order.removeItem(itemId) as Promise<void>;
     },
+
+    deleteOrder(orderId: string) {
+        return window.api.order.deleteOrder(orderId) as Promise<void>;
+    }
 };

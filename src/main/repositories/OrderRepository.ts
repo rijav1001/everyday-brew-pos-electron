@@ -82,6 +82,11 @@ export class OrderRepository {
         ORDER BY bill_number
     `);
 
+    private readonly deleteOrderStatement = this.database.prepare(`
+        DELETE FROM orders
+        WHERE id = ?
+    `);
+
     getNextBillNumber(): string {
         const result = this.database
         .prepare(
@@ -280,5 +285,34 @@ export class OrderRepository {
             startDate,
             endDate,
         ) as OrderHistoryItemDto[];
+    }
+
+    // Guard duplicate empty active orders
+    getEmptyActiveOrder(): OrderHistoryItemDto | null {
+        return this.database.prepare(`
+            SELECT
+                o.id,
+                o.bill_number AS billNumber,
+                o.grand_total AS grandTotal,
+                o.payment_method AS paymentMethod,
+                o.completed_at AS completedAt,
+                o.order_type AS orderType,
+                o.table_number AS tableNumber,
+                o.status
+            FROM orders o
+            LEFT JOIN order_items oi
+                ON oi.order_id = o.id
+            WHERE
+                o.status = ?
+            GROUP BY o.id
+            HAVING COUNT(oi.id) = 0
+            LIMIT 1
+        `).get(
+            OrderStatus.ACTIVE,
+        ) as OrderHistoryItemDto | null;
+    }
+
+    deleteOrder(orderId: string): void {
+        this.deleteOrderStatement.run(orderId);
     }
 }

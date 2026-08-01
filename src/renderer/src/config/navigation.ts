@@ -4,12 +4,19 @@ import {
     LayoutDashboard,
     Settings,
     ShoppingCart,
+    ClipboardList,
 } from "lucide-react";
 
 import type { NavigationItem } from "@renderer/types/navigation";
 import { ROUTES } from "@renderer/config/routes";
 
 export const navigationItems: NavigationItem[] = [
+    {
+        id: "active-orders",
+        title: "Active Orders",
+        path: ROUTES.ACTIVE_ORDERS,
+        icon: ClipboardList,
+    },
     {
         id: "orders",
         title: "Orders",

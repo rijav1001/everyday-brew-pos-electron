@@ -1,4 +1,4 @@
-import { MenuAddon } from "@renderer/types/menu";
+import type { MenuAddon} from "../../renderer/src/types/menu"
 
 export function areAddonsEqual(
     first: MenuAddon[],

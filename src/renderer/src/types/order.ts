@@ -10,6 +10,7 @@ export interface CompletedOrder {
 }
 
 export interface OrderItem {
+    id?: string;
     menuItem: MenuItem;
     quantity: number;
     selectedAddons: MenuAddon[];
