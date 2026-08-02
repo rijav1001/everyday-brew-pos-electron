@@ -70,8 +70,9 @@ if (process.contextIsolated) {
         getNextBillNumber: () =>
           ipcRenderer.invoke("order:getNextBillNumber"),
 
-        save: (order: CompletedOrderDto) =>
-          ipcRenderer.invoke("order:save", order),
+        // this is obsolete now
+        // save: (order: CompletedOrderDto) =>
+          // ipcRenderer.invoke("order:save", order),
 
         getHistory: () =>
           ipcRenderer.invoke("order:getHistory"),
@@ -96,6 +97,9 @@ if (process.contextIsolated) {
 
         deleteOrder: (orderId: string) =>
           ipcRenderer.invoke("order:delete", orderId),
+
+        completeOrder: (orderId: string, order: CompletedOrderDto) =>
+          ipcRenderer.invoke("order:complete", orderId, order),
       },
 
       // receipt printing

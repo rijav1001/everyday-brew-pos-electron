@@ -35,6 +35,10 @@ function OrdersPage() {
 
     async function loadOrder(orderId: string) {
         const details = await orderService.getDetails(orderId);
+        if (menuItems.length === 0) {
+            return;
+        }
+
         setOrderItems(details.items.map(item => mapOrderItem(item, menuItems)));
     }
 
@@ -190,18 +194,22 @@ function OrdersPage() {
                 paymentMethod,
             );
 
-            const orderId = await orderService.saveOrder(completedOrder);
+            await orderService.completeOrder(activeOrderId!, completedOrder);
 
-            try {
-                if (printReceipt) {
-                    await receiptService.print(orderId);
+            if (printReceipt) {
+                try {
+                    if (printReceipt) {
+                        await receiptService.print(activeOrderId!);
+
+                        toast.success("Order completed and receipt printed.");
+                    }
+                } catch (error) {
+                    console.error(error);
+                    
+                    toast.error("Order saved successfully, but the receipt could not be printed.");
                 }
-            } catch (error) {
-                console.error(error);
-                
-                toast.error(
-                    "Order saved successfully, but the receipt could not be printed."
-                );
+            } else {
+                toast.success("Order completed successfully.");
             }
 
             // Reset state

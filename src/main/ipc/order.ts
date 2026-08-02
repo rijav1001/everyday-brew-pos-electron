@@ -1,7 +1,7 @@
 import { ipcMain } from "electron";
 
 import { OrderRepository } from "../repositories/OrderRepository";
-import type { CompletedOrderDto, CreateOrderDto } from "../../shared/order";
+import type { CreateOrderDto } from "../../shared/order";
 import { OrderService } from "../services/OrderService";
 
 export function registerOrderHandlers(): void {
@@ -13,10 +13,11 @@ export function registerOrderHandlers(): void {
             repository.getNextBillNumber(),
     );
 
-    ipcMain.handle(
-        "order:save", (_, order: CompletedOrderDto) =>
-            repository.saveOrder(order),
-    );
+    // this is obsolete now
+    // ipcMain.handle(
+    //     "order:save", (_, order: CompletedOrderDto) =>
+    //         repository.saveOrder(order),
+    // );
 
     ipcMain.handle(
         "order:getHistory", () =>
@@ -56,5 +57,10 @@ export function registerOrderHandlers(): void {
     ipcMain.handle(
         "order:delete", (_event, orderId) =>
             orderService.deleteOrder(orderId),
+    );
+
+    ipcMain.handle(
+        "order:complete", (_event, orderId, order) =>
+            orderService.completeOrder(orderId, order),
     );
 }

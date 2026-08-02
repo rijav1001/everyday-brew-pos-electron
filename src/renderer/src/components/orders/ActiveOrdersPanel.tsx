@@ -30,6 +30,13 @@ function ActiveOrdersPanel({
                     Active Orders
                 </h2>
 
+                <Button
+                    className="w-auto cursor-pointer"
+                    onClick={onCreateOrder}
+                >
+                    + New Order
+                </Button>
+
                 <span className="rounded-full bg-background px-3 py-1 text-xs font-medium text-(--text-secondary)">
                     {orders.length}
                 </span>
@@ -79,13 +86,6 @@ function ActiveOrdersPanel({
                     </div>
                 ))}
             </div>
-
-            <Button
-                className="mt-4 w-full cursor-pointer"
-                onClick={onCreateOrder}
-            >
-                + New Order
-            </Button>
 
             <AlertDialog
                 open={orderToDelete !== null}

@@ -6,9 +6,10 @@ export const orderService = {
         return window.api.order.getNextBillNumber() as Promise<string>;
     },
 
-    saveOrder(order: CompletedOrderDto) {
-        return window.api.order.save(order) as Promise<string>;
-    },
+    // this is obsolete now
+    // saveOrder(order: CompletedOrderDto) {
+    //     return window.api.order.save(order) as Promise<string>;
+    // },
 
     getHistory() {
         return window.api.order.getHistory() as Promise<OrderHistoryItemDto[]>;
@@ -40,5 +41,9 @@ export const orderService = {
 
     deleteOrder(orderId: string) {
         return window.api.order.deleteOrder(orderId) as Promise<void>;
-    }
+    },
+
+    completeOrder(orderId: string, order: CompletedOrderDto) {
+        return window.api.order.completeOrder(orderId, order) as Promise<void>;
+    },
 };

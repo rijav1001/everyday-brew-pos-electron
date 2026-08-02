@@ -19,7 +19,7 @@ function AppRouter() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/orders" replace />} />
+        <Route path="/" element={<Navigate to="/active-orders" replace />} />
         <Route element={<MainLayout />}>
           <Route path="/active-orders" element={<ActiveOrdersPage />} />
           <Route path="/orders" element={<OrdersPage />} />

@@ -45,4 +45,8 @@ export class OrderService {
     deleteOrder(orderId: string): void {
         this.orderRepository.deleteOrder(orderId);
     }
+
+    completeOrder(orderId: string, order: OrderDetailsDto): void {
+        this.orderRepository.completeOrder(orderId, order);
+    }
 }

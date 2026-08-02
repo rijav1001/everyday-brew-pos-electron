@@ -9,18 +9,19 @@ export class OrderRepository {
     private readonly database = getDatabase();
 
     // order creation statements
-    private readonly insertOrderStatement = this.database.prepare(`
-        INSERT INTO orders (
-            id,
-            bill_number,
-            subtotal,
-            gst_amount,
-            grand_total,
-            payment_method,
-            completed_at
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    `);
+    // this is obsolete now
+    // private readonly insertOrderStatement = this.database.prepare(`
+    //     INSERT INTO orders (
+    //         id,
+    //         bill_number,
+    //         subtotal,
+    //         gst_amount,
+    //         grand_total,
+    //         payment_method,
+    //         completed_at
+    //     )
+    //     VALUES (?, ?, ?, ?, ?, ?, ?)
+    // `);
 
     private readonly createActiveOrderStatement = this.database.prepare(`
         INSERT INTO orders (
@@ -87,6 +88,18 @@ export class OrderRepository {
         WHERE id = ?
     `);
 
+    private readonly completeOrderStatement = this.database.prepare(`
+        UPDATE orders
+        SET
+            subtotal = ?,
+            gst_amount = ?,
+            grand_total = ?,
+            payment_method = ?,
+            completed_at = ?,
+            status = ?
+        WHERE id = ?
+    `);
+
     getNextBillNumber(): string {
         const result = this.database
         .prepare(
@@ -126,21 +139,34 @@ export class OrderRepository {
         ) as OrderHistoryItemDto[];
     }
 
-    saveOrder(order: CompletedOrderDto): string {
-        const orderId = randomUUID();
-        const billNumber = this.getNextBillNumber();
+    // this is obsolete now
+    // saveOrder(order: CompletedOrderDto): string {
+    //     const orderId = randomUUID();
+    //     const billNumber = this.getNextBillNumber();
 
-        this.insertOrderStatement.run(
-            orderId,
-            billNumber,
+    //     this.insertOrderStatement.run(
+    //         orderId,
+    //         billNumber,
+    //         order.subtotal,
+    //         order.gstAmount,
+    //         order.grandTotal,
+    //         order.paymentMethod,
+    //         order.completedAt,
+    //     );
+
+    //     return orderId;
+    // }
+
+    completeOrder(orderId: string, order: CompletedOrderDto): void {
+        this.completeOrderStatement.run(
             order.subtotal,
             order.gstAmount,
             order.grandTotal,
             order.paymentMethod,
             order.completedAt,
+            OrderStatus.COMPLETED,
+            orderId,
         );
-
-        return orderId;
     }
 
     getHistory(): OrderHistoryItemDto[] {

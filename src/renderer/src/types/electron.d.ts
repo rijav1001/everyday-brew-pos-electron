@@ -30,7 +30,8 @@ export interface ElectronAPI {
 
     order: {
         getNextBillNumber(): Promise<string>;
-        save(order: CompletedOrderDto): Promise<string>;
+        // this is obsolete now
+        // save(order: CompletedOrderDto): Promise<string>;
         getHistory(): Promise<OrderHistoryItemDto[]>;
         getDetails(id: string): Promise<OrderDetailsDto>;
         create(dto: CreateOrderDto): Promise<string>;
@@ -39,6 +40,7 @@ export interface ElectronAPI {
         updateItem(itemId: string, item: OrderItemDto): Promise<void>;
         removeItem(itemId: string): Promise<void>;
         deleteOrder(orderId: string): Promise<void>;
+        completeOrder(orderId: string, order: CompletedOrderDto): Promise<void>;
     };
 
     receipt: {

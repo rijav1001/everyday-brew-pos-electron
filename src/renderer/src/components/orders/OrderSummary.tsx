@@ -72,7 +72,7 @@ function OrderSummary({
                     <div className="flex-1 space-y-3">
                         {items.map(item => (
                             <OrderItemCard
-                                key={item.menuItem.id}
+                                key={item.id}
                                 item={item}
                             />
                         ))}
