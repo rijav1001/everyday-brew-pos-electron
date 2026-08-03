@@ -42,8 +42,8 @@ export class OrderService {
         this.orderItemRepository.removeItem(itemId);
     }
 
-    deleteOrder(orderId: string): void {
-        this.orderRepository.deleteOrder(orderId);
+    cancelOrder(orderId: string, cancelReason: string | null): void {
+        this.orderRepository.cancelOrder(orderId, cancelReason);
     }
 
     completeOrder(orderId: string, order: OrderDetailsDto): void {

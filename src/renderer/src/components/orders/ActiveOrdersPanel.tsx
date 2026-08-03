@@ -3,15 +3,16 @@ import { OrderHistoryItemDto } from "src/shared/orderHistory";
 import { OrderType } from "../../../../shared/enums";
 import { Button } from "../ui/button";
 import { useState } from "react";
-import { Trash2 } from "lucide-react";
+import { Ban } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog";
+import { Textarea } from "../ui/textarea";
 
 interface ActiveOrdersPanelProps {
     orders: OrderHistoryItemDto[];
     activeOrderId: string | null;
     onSelectOrder: (orderId: string) => void;
     onCreateOrder: () => void;
-    onDeleteOrder: (orderId: string) => void;
+    onCancelOrder: (orderId: string, cancelReason: string | null) => void;
 }
 
 function ActiveOrdersPanel({
@@ -19,10 +20,11 @@ function ActiveOrdersPanel({
     activeOrderId,
     onSelectOrder,
     onCreateOrder,
-    onDeleteOrder
+    onCancelOrder
 }: ActiveOrdersPanelProps) {
 
-    const [orderToDelete, setOrderToDelete] = useState<OrderHistoryItemDto | null>(null);
+    const [orderToCancel, setOrderToCancel] = useState<OrderHistoryItemDto | null>(null);
+    const [cancelReason, setCancelReason] = useState("");
     return (
         <div className="flex h-full flex-col">
             <div className="mb-4 flex items-center justify-between">
@@ -72,10 +74,10 @@ function ActiveOrdersPanel({
                                 className="cursor-pointer"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    setOrderToDelete(order);
+                                    setOrderToCancel(order);
                                 }}
                             >
-                                <Trash2 size={16} />
+                                <Ban size={16} />
                             </Button>
                         </div>
 
@@ -88,10 +90,11 @@ function ActiveOrdersPanel({
             </div>
 
             <AlertDialog
-                open={orderToDelete !== null}
+                open={orderToCancel !== null}
                 onOpenChange={(open) => {
                     if (!open) {
-                        setOrderToDelete(null);
+                        setOrderToCancel(null);
+                        setCancelReason("");
                     }
                 }}
             >
@@ -102,9 +105,15 @@ function ActiveOrdersPanel({
                         </AlertDialogTitle>
 
                         <AlertDialogDescription>
-                            This order will be permanently deleted.
+                            This order will be cancelled and removed from Active Orders.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
+
+                    <Textarea 
+                        placeholder="Enter reason for cancellation (optional)"
+                        value={cancelReason}
+                        onChange={(e) => setCancelReason(e.target.value)}
+                    />
 
                     <AlertDialogFooter>
                         <AlertDialogCancel className="cursor-pointer">
@@ -114,15 +123,16 @@ function ActiveOrdersPanel({
                         <AlertDialogAction
                             className="cursor-pointer"
                             onClick={async () => {
-                                if (!orderToDelete) {
+                                if (!orderToCancel) {
                                     return;
                                 }
 
-                                await onDeleteOrder(orderToDelete.id);
-                                setOrderToDelete(null);
+                                await onCancelOrder(orderToCancel.id, cancelReason);
+                                setOrderToCancel(null);
+                                setCancelReason("");
                             }}
                         >
-                            Delete
+                            Cancel Order
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

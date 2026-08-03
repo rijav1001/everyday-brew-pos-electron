@@ -55,7 +55,9 @@ export function initializeDatabase(): void {
 
             order_type TEXT NOT NULL DEFAULT 'TAKEAWAY',
             table_number INTEGER,
-            status TEXT NOT NULL DEFAULT 'ACTIVE'
+            status TEXT NOT NULL DEFAULT 'ACTIVE',
+            cancelled_at TEXT,
+            cancel_reason TEXT,
         );
 
         CREATE TABLE IF NOT EXISTS order_items (

@@ -95,8 +95,8 @@ if (process.contextIsolated) {
         removeItem: (itemId: string) =>
           ipcRenderer.invoke("order:removeItem", itemId),
 
-        deleteOrder: (orderId: string) =>
-          ipcRenderer.invoke("order:delete", orderId),
+        cancelOrder: (orderId: string, cancelReason: string | null) =>
+          ipcRenderer.invoke("order:cancel", orderId, cancelReason),
 
         completeOrder: (orderId: string, order: CompletedOrderDto) =>
           ipcRenderer.invoke("order:complete", orderId, order),

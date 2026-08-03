@@ -55,8 +55,8 @@ export function registerOrderHandlers(): void {
     );
 
     ipcMain.handle(
-        "order:delete", (_event, orderId) =>
-            orderService.deleteOrder(orderId),
+        "order:cancel", (_event, orderId, cancelReason) =>
+            orderService.cancelOrder(orderId, cancelReason),
     );
 
     ipcMain.handle(

@@ -83,8 +83,12 @@ export class OrderRepository {
         ORDER BY bill_number
     `);
 
-    private readonly deleteOrderStatement = this.database.prepare(`
-        DELETE FROM orders
+    private readonly cancelOrderStatement = this.database.prepare(`
+        UPDATE orders
+        SET
+            status = ?,
+            cancelled_at = ?,
+            cancel_reason = ?
         WHERE id = ?
     `);
 
@@ -338,7 +342,12 @@ export class OrderRepository {
         ) as OrderHistoryItemDto | null;
     }
 
-    deleteOrder(orderId: string): void {
-        this.deleteOrderStatement.run(orderId);
+    cancelOrder(orderId: string, cancelReason: string | null): void {
+        this.cancelOrderStatement.run(
+            OrderStatus.CANCELLED,
+            new Date().toISOString(),
+            cancelReason,
+            orderId
+        );
     }
 }

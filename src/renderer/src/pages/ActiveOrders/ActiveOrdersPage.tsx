@@ -58,9 +58,9 @@ function ActiveOrdersPage() {
         });
     }
 
-    async function handleDeleteOrder(orderId: string) {
-        await orderService.deleteOrder(orderId);
-        toast.success("Order deleted successfully");
+    async function handleCancelOrder(orderId: string, reason: string | null) {
+        await orderService.cancelOrder(orderId, reason);
+        toast.success("Order cancelled successfully");
         await loadActiveOrders();
     }
 
@@ -77,7 +77,7 @@ function ActiveOrdersPage() {
                     activeOrderId={null}
                     onSelectOrder={handleSelectOrder}
                     onCreateOrder={handleNewOrder}
-                    onDeleteOrder={handleDeleteOrder}
+                    onCancelOrder={handleCancelOrder}
                 />
             </div>
 
