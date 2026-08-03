@@ -26,6 +26,9 @@ interface OrderSummaryProps {
     printReceipt: boolean;
     onPrintReceiptChange: (checked: boolean) => void;
     isCompletingOrder: boolean;
+    onIncreaseQuantity: (item: OrderItem) => void;
+    onDecreaseQuantity: (item: OrderItem) => void;
+    onEditItem: (item: OrderItem) => void;
 }
 
 function OrderSummary({ 
@@ -42,7 +45,10 @@ function OrderSummary({
     isPaymentValid,
     printReceipt,
     onPrintReceiptChange,
-    isCompletingOrder
+    isCompletingOrder,
+    onIncreaseQuantity,
+    onDecreaseQuantity,
+    onEditItem,
 }: OrderSummaryProps) {
     const billing = calculateBillingSummary(items)
 
@@ -74,6 +80,9 @@ function OrderSummary({
                             <OrderItemCard
                                 key={item.id}
                                 item={item}
+                                onIncreaseQuantity={onIncreaseQuantity}
+                                onDecreaseQuantity={onDecreaseQuantity}
+                                onEditItem={onEditItem}
                             />
                         ))}
                     </div>

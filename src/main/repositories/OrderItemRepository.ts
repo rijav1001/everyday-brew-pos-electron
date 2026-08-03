@@ -172,13 +172,14 @@ export class OrderItemRepository {
     }
 
     updateItem(itemId: string, item: OrderItemDto): void {
+        const normalizedNotes = normalizeNotes(item.notes);
         const transaction = this.database.transaction(() => {
             this.updateOrderItemStatement.run(
                 item.menuItemName,
                 item.unitPrice,
                 item.gstRate,
                 item.quantity,
-                item.notes,
+                normalizedNotes,
                 itemId,
             );
 

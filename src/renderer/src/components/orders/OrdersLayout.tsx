@@ -29,6 +29,9 @@ interface OrdersLayoutProps {
     printReceipt: boolean;
     onPrintReceiptChange: (checked: boolean) => void;
     isCompletingOrder: boolean;
+    onIncreaseOrderItemQuantity: (item: OrderItem) => void;
+    onDecreaseOrderItemQuantity: (item: OrderItem) => void;
+    onEditOrderItem: (item: OrderItem) => void;
 }
 
 function OrdersLayout({ 
@@ -51,7 +54,10 @@ function OrdersLayout({
     menuItems,
     printReceipt,
     onPrintReceiptChange,
-    isCompletingOrder
+    isCompletingOrder,
+    onIncreaseOrderItemQuantity,
+    onDecreaseOrderItemQuantity,
+    onEditOrderItem
 }: OrdersLayoutProps) {
     return (
         <div className="grid h-full gap-6"
@@ -92,6 +98,9 @@ function OrdersLayout({
                     printReceipt={printReceipt}
                     onPrintReceiptChange={onPrintReceiptChange}
                     isCompletingOrder={isCompletingOrder}
+                    onIncreaseQuantity={onIncreaseOrderItemQuantity}
+                    onDecreaseQuantity={onDecreaseOrderItemQuantity}
+                    onEditItem={onEditOrderItem}
                 />
             </section>
 

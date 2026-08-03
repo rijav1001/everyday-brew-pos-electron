@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+/* eslint-disable react-hooks/set-state-in-effect */
+import { useEffect, useMemo, useState } from "react";
 
 import { Button } from "@renderer/components/ui/button";
 import { Checkbox } from "@renderer/components/ui/checkbox";
@@ -12,12 +13,14 @@ import {
 import { Textarea } from "@renderer/components/ui/textarea";
 
 import type { MenuAddon, MenuItem } from "@renderer/types/menu";
+import { OrderItem } from "@renderer/types/order";
 
 interface CustomizeDrinkDialogProps {
     item: MenuItem | null;
     open: boolean;
     onOpenChange: (open: boolean) => void;
     onConfirm: (addons: MenuAddon[], notes: string) => void;
+    editingItem?: OrderItem | null;
 }
 
 function CustomizeDrinkDialog({
@@ -25,9 +28,19 @@ function CustomizeDrinkDialog({
     open,
     onOpenChange,
     onConfirm,
+    editingItem
 }: CustomizeDrinkDialogProps) {
     const [selectedAddons, setSelectedAddons] = useState<MenuAddon[]>([]);
     const [notes, setNotes] = useState("");
+
+    useEffect(() => {
+        if (!open) {
+            return;
+        }
+
+        setSelectedAddons(editingItem?.selectedAddons ?? []);
+        setNotes(editingItem?.notes ?? "");
+    }, [open, editingItem]);
 
     const total = useMemo(() => {
         if (!item) return 0;
@@ -80,7 +93,7 @@ function CustomizeDrinkDialog({
 
                 <DialogHeader>
                     <DialogTitle>
-                        Customize your {item.name}
+                        {editingItem ? "Edit" : "Customize"} your {item.name}
                     </DialogTitle>
                 </DialogHeader>
 
@@ -195,7 +208,7 @@ function CustomizeDrinkDialog({
 
                         }}
                     >
-                        Add to Order
+                        {editingItem ? "Save Changes" : "Add to Order"}
                     </Button>
 
                 </DialogFooter>

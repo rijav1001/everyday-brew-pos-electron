@@ -2,7 +2,7 @@ import type { OrderItem } from "@renderer/types/order";
 import type { BillingSummary } from "@renderer/utils/billing";
 import type { PaymentMethod } from "@renderer/types/payment";
 import { CompletedOrderDto, OrderItemDto } from "src/shared/order";
-import { normalizeNotes } from "../../../shared/utils/orderUtils";
+import { formatNotes, normalizeNotes } from "../../../shared/utils/orderUtils";
 import { MenuItem } from "@renderer/types/menu";
 
 export function mapCompletedOrder(
@@ -24,7 +24,7 @@ export function mapCompletedOrder(
             unitPrice: item.menuItem.displayPrice,
             gstRate: item.menuItem.gstRate,
             quantity: item.quantity,
-            notes: item.notes,
+            notes: formatNotes(item.notes),
             addons: item.selectedAddons.map(addon => ({
                 name: addon.name,
                 price: addon.price,
@@ -60,7 +60,7 @@ export function mapOrderItem(
 
             return menuAddon;
         }),
-        notes: dto.notes,
+        notes: formatNotes(dto.notes),
         normalizedNotes: normalizeNotes(dto.notes),
     };
 }
@@ -72,7 +72,7 @@ export function mapOrderItemDto(item: OrderItem): OrderItemDto {
         unitPrice: item.menuItem.displayPrice,
         gstRate: item.menuItem.gstRate,
         quantity: item.quantity,
-        notes: item.notes,
+        notes: formatNotes(item.notes),
         addons: item.selectedAddons.map(addon => ({
             name: addon.name,
             price: addon.price,

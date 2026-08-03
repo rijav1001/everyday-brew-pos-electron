@@ -16,6 +16,7 @@ import { mapCompletedOrder, mapOrderItem, mapOrderItemDto } from "@renderer/mapp
 import { receiptService } from "@renderer/services/receiptService";
 import { toast } from "sonner";
 import { useLocation, useNavigate } from "react-router-dom";
+import { formatNotes } from "../../../../shared/utils/orderUtils";
 
 function OrdersPage() {
     const navigate = useNavigate();
@@ -31,7 +32,8 @@ function OrdersPage() {
     const [splitCash, setSplitCash] = useState<number | null>(null);
     const [splitUpi, setSplitUpi] = useState<number | null>(null);
     const [printReceipt, setPrintReceipt] = useState(true);
-    const [isCompletingOrder, setIsCompletingOrder] = useState(false);    
+    const [isCompletingOrder, setIsCompletingOrder] = useState(false);
+    const [editingOrderItem, setEditingOrderItem] = useState<OrderItem | null>(null);
 
     async function loadOrder(orderId: string) {
         const details = await orderService.getDetails(orderId);
@@ -131,21 +133,36 @@ function OrdersPage() {
     async function handleAddCustomizedItem(addons: MenuAddon[], notes: string) {
         if (!selectedMenuItem || !activeOrderId) return;
 
-        await orderService.addItem(
-            activeOrderId,
-            {
-                menuItemName: selectedMenuItem.name,
-                unitPrice: selectedMenuItem.displayPrice,
-                gstRate: selectedMenuItem.gstRate,
-                quantity: 1,
-                notes,
-                addons: addons.map(addon => ({
-                    name: addon.name,
-                    price: addon.price,
-                })),
-            },
-        );
+        if (editingOrderItem) {
+            await orderService.updateItem(
+                editingOrderItem.id!,
+                {
+                    ...mapOrderItemDto(editingOrderItem),
+                    notes: formatNotes(notes),
+                    addons: addons.map(addon => ({
+                        name: addon.name,
+                        price: addon.price,
+                    })),
+                },
+            );
+        } else {
+            await orderService.addItem(
+                activeOrderId,
+                {
+                    menuItemName: selectedMenuItem.name,
+                    unitPrice: selectedMenuItem.displayPrice,
+                    gstRate: selectedMenuItem.gstRate,
+                    quantity: 1,
+                    notes: formatNotes(notes),
+                    addons: addons.map(addon => ({
+                        name: addon.name,
+                        price: addon.price,
+                    })),
+                },
+            );
+        }
 
+        // setEditingOrderItem(null);
         await loadOrder(activeOrderId);
     }
 
@@ -228,6 +245,48 @@ function OrdersPage() {
         }
     }
 
+    async function handleIncreaseOrderItemQuantity(item: OrderItem) {
+        if (!activeOrderId) {
+            return;
+        }
+
+        await orderService.updateItem(
+            item.id!,
+            mapOrderItemDto({
+                ...item,
+                quantity: item.quantity + 1,
+            }),
+        );
+
+        await loadOrder(activeOrderId);
+    }
+
+    async function handleDecreaseOrderItemQuantity(item: OrderItem) {
+        if (!activeOrderId) {
+            return;
+        }
+
+        if (item.quantity > 1) {
+            await orderService.updateItem(
+                item.id!,
+                mapOrderItemDto({
+                    ...item,
+                    quantity: item.quantity - 1,
+                }),
+            );
+        } else {
+            await orderService.removeItem(item.id!);
+        }
+
+        await loadOrder(activeOrderId);
+    }
+
+    function handleEditOrderItem(item: OrderItem) {
+        setEditingOrderItem(item);
+        setSelectedMenuItem(item.menuItem);
+        setCustomizeDialogOpen(true);
+    }
+
     return (
         <div className="flex h-full flex-col">
             <PageHeader title="Orders" description="Take customer orders" />
@@ -253,13 +312,23 @@ function OrdersPage() {
                     printReceipt={printReceipt}
                     onPrintReceiptChange={setPrintReceipt}
                     isCompletingOrder={isCompletingOrder}
+                    onIncreaseOrderItemQuantity={handleIncreaseOrderItemQuantity}
+                    onDecreaseOrderItemQuantity={handleDecreaseOrderItemQuantity}
+                    onEditOrderItem={handleEditOrderItem}
                 />
 
                 <CustomizeDrinkDialog
                     item={selectedMenuItem}
                     open={isCustomizeDialogOpen}
-                    onOpenChange={setCustomizeDialogOpen}
+                    onOpenChange={(open) => {
+                        setCustomizeDialogOpen(open);
+
+                        if (!open) {
+                            setEditingOrderItem(null);
+                        }
+                    }}
                     onConfirm={handleAddCustomizedItem}
+                    editingItem={editingOrderItem}
                 />
 
             </div>
