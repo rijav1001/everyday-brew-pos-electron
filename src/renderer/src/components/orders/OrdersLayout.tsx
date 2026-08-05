@@ -7,6 +7,9 @@ import { PaymentMethod } from "@renderer/types/payment";
 import { OrderItem } from "@renderer/types/order";
 import type { CategoryDto } from "src/shared/category";
 import type { MenuItemDto } from "src/shared/menu";
+import { Input } from "../ui/input";
+import { Search } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 interface OrdersLayoutProps {
     selectedCategory: string;
@@ -32,6 +35,8 @@ interface OrdersLayoutProps {
     onIncreaseOrderItemQuantity: (item: OrderItem) => void;
     onDecreaseOrderItemQuantity: (item: OrderItem) => void;
     onEditOrderItem: (item: OrderItem) => void;
+    searchQuery: string;
+    onSearchQueryChange: (value: string) => void;
 }
 
 function OrdersLayout({ 
@@ -57,8 +62,17 @@ function OrdersLayout({
     isCompletingOrder,
     onIncreaseOrderItemQuantity,
     onDecreaseOrderItemQuantity,
-    onEditOrderItem
+    onEditOrderItem,
+    searchQuery,
+    onSearchQueryChange
 }: OrdersLayoutProps) {
+
+    const searchInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        searchInputRef.current?.focus();
+    }, []);
+
     return (
         <div className="grid h-full gap-6"
             style={{ gridTemplateColumns: `${ORDERS_LAYOUT.CONTROL_PANEL_WIDTH}px 1fr ${ORDERS_LAYOUT.ORDER_PANEL_WIDTH}px`, }}
@@ -72,14 +86,44 @@ function OrdersLayout({
                 />
             </section>
 
-            <section className="rounded-2xl bg-(--surface) p-5 shadow-sm">
-                <MenuGrid 
-                    categoryId={selectedCategory}
-                    orderItems={orderItems}
-                    menuItems={menuItems}
-                    onIncreaseQuantity={onIncreaseQuantity}
-                    onDecreaseQuantity={onDecreaseQuantity}
-                />
+            <section className="flex min-h-0 flex-col rounded-2xl bg-(--surface) p-5 shadow-sm">
+                <div className="sticky top-0 z-10 mb-3 border-border bg-(--surface) pb-3">
+                    <h2 className="mb-2 text-lg font-semibold">
+                        Menu
+                    </h2>
+
+                    <div className="mb-5">
+                        <div className="mt-2 h-px bg-border" />
+                    </div>
+                    
+                    <div className="relative">
+                        <Search
+                            size={18}
+                            className="absolute left-3 top-1/2 -translate-y-1/2 text-(--text-secondary)"
+                        />
+
+                        <Input
+                            className="h-10 rounded-none border-0 border-b border-border bg-gray-100 px-0 pl-10 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                            placeholder="Search drinks..."
+                            value={searchQuery}
+                            onChange={(event) =>
+                                onSearchQueryChange(event.target.value)
+                            }
+                            ref={searchInputRef}
+                        />
+                    </div>
+                </div>
+
+                <div className="min-h-0 flex-1 overflow-y-auto">
+                    <MenuGrid 
+                        categoryId={selectedCategory}
+                        orderItems={orderItems}
+                        menuItems={menuItems}
+                        onIncreaseQuantity={onIncreaseQuantity}
+                        onDecreaseQuantity={onDecreaseQuantity}
+                        searchQuery={searchQuery}
+                    />
+                </div>
             </section>
 
             <section className="rounded-2xl bg-(--surface) p-5 shadow-sm">

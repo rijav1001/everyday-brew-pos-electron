@@ -10,31 +10,27 @@ interface MenuGridProps {
     onIncreaseQuantity: (item: MenuItem) => void;
     onDecreaseQuantity: (itemId: string) => void;
     menuItems: MenuItemDto[];
+    searchQuery: string;
 }
 
-function MenuGrid({ categoryId, orderItems, onIncreaseQuantity, onDecreaseQuantity, menuItems }: MenuGridProps) {
-    const items = menuItems.filter(
-        item => item.categoryId == categoryId
+function MenuGrid({ categoryId, orderItems, onIncreaseQuantity, onDecreaseQuantity, menuItems, searchQuery }: MenuGridProps) {
+    const filteredMenuItems = menuItems.filter(item =>
+        item.categoryId === categoryId &&
+        item.name.toLowerCase().includes(
+            searchQuery.trim().toLowerCase(),
+        )
     );
 
     return (
         <>
-            <div className="mb-5">
-                <h2 className="text-lg font-semibold">
-                    Menu
-                </h2>
-
-                <div className="mt-2 h-px bg-border" />
-            </div>
-
-            {items.length === 0 ? (
+            {filteredMenuItems.length === 0 ? (
                 <EmptyState
                     title="No menu items"
-                    description="No items are available in this category."
+                    description="No items are available in this category, try different search"
                 />
             ) : (
                 <div className="grid grid-cols-2 gap-4">
-                    {items.map(item => {
+                    {filteredMenuItems.map(item => {
                         const quantity = orderItems.find(
                             order => order.menuItem.id === item.id
                         )?.quantity ?? 0;

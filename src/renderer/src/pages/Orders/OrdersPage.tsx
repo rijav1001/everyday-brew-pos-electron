@@ -34,6 +34,7 @@ function OrdersPage() {
     const [printReceipt, setPrintReceipt] = useState(true);
     const [isCompletingOrder, setIsCompletingOrder] = useState(false);
     const [editingOrderItem, setEditingOrderItem] = useState<OrderItem | null>(null);
+    const [searchQuery, setSearchQuery] = useState("");
 
     async function loadOrder(orderId: string) {
         const details = await orderService.getDetails(orderId);
@@ -315,6 +316,8 @@ function OrdersPage() {
                     onIncreaseOrderItemQuantity={handleIncreaseOrderItemQuantity}
                     onDecreaseOrderItemQuantity={handleDecreaseOrderItemQuantity}
                     onEditOrderItem={handleEditOrderItem}
+                    searchQuery={searchQuery}
+                    onSearchQueryChange={setSearchQuery}
                 />
 
                 <CustomizeDrinkDialog
