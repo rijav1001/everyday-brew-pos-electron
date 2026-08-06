@@ -2,7 +2,23 @@ export type MenuCategoryIcon =
     | "coffee"
     | "snowflake"
     | "cup"
-    | "cookie";
+    | "cookie"
+    | "milk"
+    | "sparkles"
+    | "star"
+    | "badge-plus"
+    | "glass-water"
+    | "leaf"
+    | "cherry"
+    | "droplets"
+    | "shopping-bag"
+    | "store"
+    | "gift"
+    | "package"
+    | "package-2"
+    | "utensils-crossed"
+    | "sandwich"
+    | "coffeeicon";
 
 export interface CategoryDto {
     id: string;

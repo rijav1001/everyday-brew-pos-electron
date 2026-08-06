@@ -11,13 +11,6 @@ import {
 } from "@renderer/components/ui/dialog";
 import { Button } from "@renderer/components/ui/button";
 import { Input } from "@renderer/components/ui/input";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue
-} from "@renderer/components/ui/select";
 import { CATEGORY_ICONS, getCategoryIcon } from "@renderer/constants/categoryIcons";
 import type { CategoryDto, CreateCategoryRequest, MenuCategoryIcon } from "src/shared/category";
 
@@ -83,7 +76,7 @@ function CategoryDialog({
             open={open}
             onOpenChange={onOpenChange}
         >
-            <DialogContent className="sm:max-w-md bg-white">
+            <DialogContent className="sm:max-w-xl bg-white">
 
                 <DialogHeader>
 
@@ -121,42 +114,39 @@ function CategoryDialog({
                     <div className="space-y-2">
 
                         <label className="text-sm font-medium mb-1">
-                            Icon
+                            Choose an icon
                         </label>
 
-                        <Select
-                            value={icon}
-                            onValueChange={(value) =>
-                                setIcon(
-                                    value as MenuCategoryIcon,
-                                )
-                            }
-                        >
-                            <SelectTrigger className="cursor-pointer">
-                                <SelectValue />
-                            </SelectTrigger>
+                        <div className="grid grid-cols-5 gap-3">
+                            {CATEGORY_ICONS.map((option) => {
+                                const Icon = option.icon;
+                                const selected = icon === option.value;
 
-                            <SelectContent className="bg-white">
+                                return (
+                                    <button
+                                        key={option.value}
+                                        type="button"
+                                        onClick={() => setIcon(option.value)}
+                                        className={`
+                                            flex flex-col items-center justify-center gap-2
+                                            rounded-xl border p-3 transition-all
+                                            cursor-pointer
+                                            ${
+                                                selected
+                                                    ? "border-accent bg-accent text-white"
+                                                    : "border-border hover:border-accent hover:bg-(--surface-hover)"
+                                            }
+                                        `}
+                                    >
+                                        <Icon className="h-6 w-6" />
 
-                                {CATEGORY_ICONS.map((option) => {
-                                    const Icon =
-                                        option.icon;
-
-                                    return (
-                                        <SelectItem
-                                            key={option.value}
-                                            value={option.value}
-                                        >
-                                            <div className="flex items-center gap-2">
-                                                <Icon className="h-4 w-4" />
-                                                {option.label}
-                                            </div>
-                                        </SelectItem>
-                                    );
-                                })}
-
-                            </SelectContent>
-                        </Select>
+                                        <span className="text-xs text-center leading-tight">
+                                            {option.label}
+                                        </span>
+                                    </button>
+                                );
+                            })}
+                        </div>
 
                     </div>
 
@@ -185,7 +175,7 @@ function CategoryDialog({
                     </Button>
 
                     <Button
-                        className="cursor-pointer"
+                        className="cursor-pointer bg-accent"
                         onClick={handleSave}
                     >
                         {mode === "create"
