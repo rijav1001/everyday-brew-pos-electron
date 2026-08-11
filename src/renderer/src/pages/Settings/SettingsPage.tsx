@@ -1,20 +1,12 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import AboutCard from "@renderer/components/settings/AboutCard";
 import BackupRestoreCard from "@renderer/components/settings/BackupRestoreCard";
 import BusinessSettingsCard from "@renderer/components/settings/BusinessSettingsCard";
 import ReceiptSettingsCard from "@renderer/components/settings/ReceiptSettingsCard";
 import TaxSettingsCard from "@renderer/components/settings/TaxSettingsCard";
-import { useSettings } from "@renderer/hooks/useSettings";
-import { useEffect } from "react";
+import { useSettings } from "@renderer/context/SettingsContext";
 
 function SettingsPage() {
     const settings = useSettings();
-
-    useEffect(() => {
-
-        settings.load();
-
-    }, []);
 
     return (
         <div className="space-y-6">

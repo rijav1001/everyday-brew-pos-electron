@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
@@ -37,7 +38,10 @@ function BackupRestoreCard({
 
                     <Button
                         className="cursor-pointer"
-                        onClick={onBackup}
+                        onClick={() => {
+                            onBackup();
+                            toast.success("Database backed up successfully!");
+                        }}
                     >
                         Backup Database
                     </Button>
@@ -58,7 +62,10 @@ function BackupRestoreCard({
                     <Button
                         className="cursor-pointer"
                         variant="destructive"
-                        onClick={onRestore}
+                        onClick={() => {
+                            onRestore();
+                            toast.success("Database restored successfully!");
+                        }}
                     >
                         Restore Database
                     </Button>

@@ -6,6 +6,7 @@ import { Switch } from "../ui/switch";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { toast } from "sonner";
 
 interface ReceiptSettingsCardProps {
     receipt?: ReceiptSettingsDto;
@@ -149,7 +150,10 @@ function ReceiptSettingsCard({
 
                 <Button
                     className="cursor-pointer"
-                    onClick={() => onSave(form)}
+                    onClick={() => {
+                        onSave(form);
+                        toast.success("Receipt settings saved successfully!");
+                    }}
                 >
                     Save Receipt Settings
                 </Button>

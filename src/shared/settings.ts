@@ -5,6 +5,7 @@ export interface SettingDto {
 
 export interface BusinessSettingsDto {
     name: string;
+    ownerName: string;
     gstin: string;
     address: string;
     phone: string;

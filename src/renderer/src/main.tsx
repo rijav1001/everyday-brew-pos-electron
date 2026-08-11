@@ -5,10 +5,13 @@ import AppRouter from "./router/AppRouter";
 
 import "./index.css";
 import Sonner from "./components/ui/sonner";
+import { SettingsProvider } from "./context/SettingsContext";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <AppRouter />
+    <SettingsProvider>
+      <AppRouter />
+    </SettingsProvider>
     <Sonner />
   </React.StrictMode>
 );

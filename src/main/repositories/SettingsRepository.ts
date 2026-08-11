@@ -54,6 +54,9 @@ export class SettingsRepository {
             name:
                 this.get("business.name") ?? "",
 
+            ownerName:
+                this.get("business.ownerName") ?? "",
+
             gstin:
                 this.get("business.gstin") ?? "",
 
@@ -70,6 +73,11 @@ export class SettingsRepository {
         this.set(
             "business.name",
             settings.name,
+        );
+
+        this.set(
+            "business.ownerName",
+            settings.ownerName,
         );
 
         this.set(

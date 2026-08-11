@@ -5,6 +5,7 @@ import { BusinessSettingsDto } from "../../../../shared/settings";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Input } from "../ui/input";
+import { toast } from "sonner";
 
 interface BusinessSettingsCardProps {
     business?: BusinessSettingsDto;
@@ -21,6 +22,7 @@ function BusinessSettingsCard({
     const [form, setForm] =
         useState<BusinessSettingsDto>({
             name: "",
+            ownerName: "",
             gstin: "",
             address: "",
             phone: "",
@@ -60,6 +62,23 @@ function BusinessSettingsCard({
                             setForm({
                                 ...form,
                                 name: e.target.value,
+                            })}
+                    />
+
+                </div>
+
+                <div>
+
+                    <label>
+                        Owner Name
+                    </label>
+
+                    <Input
+                        value={form.ownerName}
+                        onChange={(e) =>
+                            setForm({
+                                ...form,
+                                ownerName: e.target.value,
                             })}
                     />
 
@@ -118,7 +137,10 @@ function BusinessSettingsCard({
 
                 <Button
                     className="cursor-pointer"
-                    onClick={() => onSave(form)}
+                    onClick={() => {
+                        onSave(form);
+                        toast.success("Business information saved successfully!");
+                    }}
                 >
                     Save Business Information
                 </Button>

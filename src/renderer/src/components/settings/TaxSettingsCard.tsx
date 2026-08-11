@@ -4,6 +4,7 @@ import { TaxSettingsDto } from "../../../../shared/settings";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { toast } from "sonner";
 
 interface TaxSettingsCardProps {
     tax?: TaxSettingsDto;
@@ -78,7 +79,10 @@ function TaxSettingsCard({
 
                 <Button
                     className="cursor-pointer"
-                    onClick={() => onSave(form)}
+                    onClick={() => {
+                        onSave(form);
+                        toast.success("Tax settings saved successfully!");
+                    }}
                 >
                     Save Tax Settings
                 </Button>
