@@ -77,4 +77,10 @@ export interface ElectronAPI {
         backupDatabase(): Promise<void>;
         restoreDatabase(): Promise<void>;
     };
+
+    businessDay: {
+        getOpen(): Promise<BusinessDayDto | null>;
+        create(businessDate: string, openedAt: string, scheduledCloseAt: string): Promise<string>;
+        close(businessDayId: string): Promise<void>;
+    };
 }

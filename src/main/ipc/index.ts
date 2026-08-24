@@ -13,6 +13,7 @@ import { ReportsService } from "../services/ReportsService";
 import { SettingsRepository } from "../repositories/SettingsRepository";
 import { SettingsService } from "../services/SettingsService";
 import { DatabaseService } from "../services/DatabaseService";
+import { registerBusinessDayHandlers } from "./businessDay";
 
 export function registerIpcHandlers(): void {
     const database = getDatabase();
@@ -33,4 +34,5 @@ export function registerIpcHandlers(): void {
     registerDashboardHandlers(dashboardService);
     registerReportsHandlers(reportsService);
     registerSettingsHandlers(settingsService);
+    registerBusinessDayHandlers();
 }

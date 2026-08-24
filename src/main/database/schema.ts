@@ -57,7 +57,8 @@ export function initializeDatabase(): void {
             table_number INTEGER,
             status TEXT NOT NULL DEFAULT 'ACTIVE',
             cancelled_at TEXT,
-            cancel_reason TEXT
+            cancel_reason TEXT,
+            business_day_id TEXT REFERENCES business_days(id),
         );
 
         CREATE TABLE IF NOT EXISTS order_items (
@@ -89,6 +90,15 @@ export function initializeDatabase(): void {
             FOREIGN KEY(order_item_id)
                 REFERENCES order_items(id)
                 ON DELETE CASCADE
+        );
+
+        CREATE TABLE IF NOT EXISTS business_days (
+            id TEXT PRIMARY KEY,
+            business_date TEXT NOT NULL,
+            opened_at TEXT NOT NULL,
+            scheduled_close_at TEXT NOT NULL,
+            actual_closed_at TEXT,
+            status TEXT NOT NULL
         );
 
     `);

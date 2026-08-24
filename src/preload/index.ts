@@ -179,7 +179,18 @@ if (process.contextIsolated) {
 
         restoreDatabase: () =>
           ipcRenderer.invoke("settings:restoreDatabase"),
-      }
+      },
+
+      businessDay: {
+        getOpen: () =>
+          ipcRenderer.invoke("businessDay:getOpen"),
+
+        create: (businessDate: string, openedAt: string, scheduledCloseAt: string) =>
+          ipcRenderer.invoke("businessDay:create", businessDate, openedAt, scheduledCloseAt),
+
+        close: (businessDayId: string) =>
+          ipcRenderer.invoke("businessDay:close", businessDayId),
+      },
     })
   } catch (error) {
     console.error(error)
