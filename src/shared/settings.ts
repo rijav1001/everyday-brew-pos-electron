@@ -9,6 +9,8 @@ export interface BusinessSettingsDto {
     gstin: string;
     address: string;
     phone: string;
+    businessDayStartTime: string;
+    businessDayCloseTime: string;
 }
 
 export interface ReceiptSettingsDto {

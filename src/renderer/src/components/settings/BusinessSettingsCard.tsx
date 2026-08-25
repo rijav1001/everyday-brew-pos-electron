@@ -26,6 +26,8 @@ function BusinessSettingsCard({
             gstin: "",
             address: "",
             phone: "",
+            businessDayStartTime: "10:00",
+            businessDayCloseTime: "00:00",
         });
 
     useEffect(() => {
@@ -134,6 +136,45 @@ function BusinessSettingsCard({
                     />
 
                 </div>
+
+                <div>
+
+                    <label>
+                        Business Day Starts
+                    </label>
+
+                    <Input
+                        type="time"
+                        value={form.businessDayStartTime}
+                        onChange={(e) =>
+                            setForm({
+                                ...form,
+                                businessDayStartTime: e.target.value,
+                            })}
+                    />
+                </div>
+
+                <div>
+
+                    <label>
+                        Business Day Closes
+                    </label>
+
+                    <Input
+                        type="time"
+                        value={form.businessDayCloseTime}
+                        onChange={(e) =>
+                            setForm({
+                                ...form,
+                                businessDayCloseTime: e.target.value,
+                            })}
+                    />
+                </div>
+
+                <p className="text-xs text-(--text-secondary)">
+                    Orders after midnight can still belong to the previous
+                    business day when the closing time extends past midnight.
+                </p>
 
                 <Button
                     className="cursor-pointer"

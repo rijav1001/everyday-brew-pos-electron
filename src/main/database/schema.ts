@@ -58,7 +58,7 @@ export function initializeDatabase(): void {
             status TEXT NOT NULL DEFAULT 'ACTIVE',
             cancelled_at TEXT,
             cancel_reason TEXT,
-            business_day_id TEXT REFERENCES business_days(id),
+            business_day_id TEXT REFERENCES business_days(id)
         );
 
         CREATE TABLE IF NOT EXISTS order_items (

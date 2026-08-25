@@ -34,9 +34,10 @@ export class OrderRepository {
             completed_at,
             order_type,
             table_number,
+            business_day_id,
             status
         )
-        VALUES (?, ?, 0, 0, 0, '', NULL, ?, ?, ?)
+        VALUES (?, ?, 0, 0, 0, '', NULL, ?, ?, ?, ?)
     `);
 
     // order history statements
@@ -121,7 +122,7 @@ export class OrderRepository {
         return `EB${next.toString().padStart(6, "0")}`;
     }
 
-    createActiveOrder(order: CreateOrderDto): string {
+    createActiveOrder(order: CreateOrderDto, businessDayId: string): string {
         const id = randomUUID();
 
         const billNumber = this.getNextBillNumber();
@@ -131,6 +132,7 @@ export class OrderRepository {
             billNumber,
             order.orderType,
             order.tableNumber,
+            businessDayId,
             OrderStatus.ACTIVE,
         );
 

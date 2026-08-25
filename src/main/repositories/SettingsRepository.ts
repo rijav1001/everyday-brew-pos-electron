@@ -66,6 +66,11 @@ export class SettingsRepository {
             phone:
                 this.get("business.phone") ?? "",
 
+            businessDayStartTime:
+                this.get("business.businessDayStartTime") ?? "10:00",
+
+            businessDayCloseTime:
+                this.get("business.businessDayCloseTime") ?? "00:00",
         };
     }
 
@@ -93,6 +98,16 @@ export class SettingsRepository {
         this.set(
             "business.phone",
             settings.phone,
+        );
+
+        this.set(
+            "business.businessDayStartTime",
+            settings.businessDayStartTime,
+        );
+
+        this.set(
+            "business.businessDayCloseTime",
+            settings.businessDayCloseTime,
         );
     }
 

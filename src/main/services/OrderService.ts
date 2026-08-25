@@ -1,19 +1,27 @@
 import { CreateOrderDto, OrderDetailsDto, OrderItemDto } from "../../shared/order";
 import { OrderHistoryItemDto } from "../../shared/orderHistory";
+import { BusinessDayRepository } from "../repositories/BusinessDayRepository";
 import { OrderItemRepository } from "../repositories/OrderItemRepository";
 import { OrderRepository } from "../repositories/OrderRepository";
+import { BusinessDayService } from "./BusinessDayService";
+import { SettingsRepository } from "../repositories/SettingsRepository";
 
 export class OrderService {
     private readonly orderRepository = new OrderRepository();
     private readonly orderItemRepository = new OrderItemRepository();
+    private readonly businessDayRepository = new BusinessDayRepository();
+    private readonly settingsRepository = new SettingsRepository();
+    private readonly businessDayService = new BusinessDayService(this.businessDayRepository, this.settingsRepository);
 
-    createActiveOrder(order: CreateOrderDto): string {
+    async createActiveOrder(order: CreateOrderDto): Promise<string> {
         const existing = this.orderRepository.getEmptyActiveOrder();
         if (existing) {
             return existing.id;
         }
 
-        return this.orderRepository.createActiveOrder(order);
+        const businessDay = await this.businessDayService.getOrCreateCurrentBusinessDay();
+
+        return this.orderRepository.createActiveOrder(order, businessDay.id);
     }
 
     getActiveOrders(): OrderHistoryItemDto[] {

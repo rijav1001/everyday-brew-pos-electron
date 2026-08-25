@@ -1,10 +1,12 @@
 import { ipcMain } from "electron";
 import { BusinessDayRepository } from "../repositories/BusinessDayRepository";
 import { BusinessDayService } from "../services/BusinessDayService";
+import { SettingsRepository } from "../repositories/SettingsRepository";
 
 export function registerBusinessDayHandlers(): void {
     const repository = new BusinessDayRepository();
-    const service = new BusinessDayService(repository);
+    const settingsRepository = new SettingsRepository();
+    const service = new BusinessDayService(repository, settingsRepository);
 
     ipcMain.handle(
         "businessDay:getOpen", () =>
