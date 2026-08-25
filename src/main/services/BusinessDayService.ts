@@ -13,20 +13,29 @@ export class BusinessDayService {
     }
 
     async getOrCreateCurrentBusinessDay(): Promise<BusinessDayDto> {
-        const existing =
-            this.businessDayRepository.getOpenBusinessDay();
+        const existing = this.businessDayRepository.getOpenBusinessDay();
 
-        if (existing) {
-            return existing;
-        }
-
-        const business =
-            this.settingsRepository.getBusinessSettings();
+        const business = this.settingsRepository.getBusinessSettings();
 
         const timing = this.getBusinessDayTiming(
             business.businessDayStartTime,
             business.businessDayCloseTime,
         );
+
+        if (existing) {
+            const scheduledClose = new Date(existing.scheduledCloseAt);
+
+            const now = new Date();
+
+            if (now <= scheduledClose) {
+                return existing;
+            }
+
+            // Existing business day has passed its closing time.
+            this.businessDayRepository.closeBusinessDay(
+                existing.id,
+            );
+        }
 
         const id =
             this.businessDayRepository.createBusinessDay(
@@ -35,12 +44,11 @@ export class BusinessDayService {
                 timing.scheduledCloseAt,
             );
 
-        const created =
-            this.businessDayRepository.getOpenBusinessDay();
+        const created = this.businessDayRepository.getOpenBusinessDay();
 
         if (!created || created.id !== id) {
             throw new Error(
-                "Failed to create business day.",
+                "Failed to create current business day.",
             );
         }
 
@@ -134,5 +142,12 @@ export class BusinessDayService {
         ).padStart(2, "0");
 
         return `${year}-${month}-${day}`;
+    }
+
+    extendBusinessDay(businessDayId: string, scheduledCloseAt: string): void {
+        this.businessDayRepository.extendBusinessDay(
+            businessDayId,
+            scheduledCloseAt,
+        );
     }
 }

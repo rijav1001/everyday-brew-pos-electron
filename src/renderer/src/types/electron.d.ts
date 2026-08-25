@@ -82,5 +82,12 @@ export interface ElectronAPI {
         getOpen(): Promise<BusinessDayDto | null>;
         create(businessDate: string, openedAt: string, scheduledCloseAt: string): Promise<string>;
         close(businessDayId: string): Promise<void>;
+        extend(businessDayId: string, scheduledCloseAt: string): Promise<void>;
+        getStatus(): Promise<{
+            businessDayId: string;
+            scheduledCloseAt: string;
+            shouldWarn: boolean;
+            hasExpired: boolean;
+        } | null>;
     };
 }

@@ -43,6 +43,14 @@ export class BusinessDayRepository {
             WHERE id = ?
         `);
 
+    private readonly extendBusinessDayStatement =
+        this.database.prepare(`
+            UPDATE business_days
+            SET scheduled_close_at = ?
+            WHERE id = ?
+            AND status = ?
+        `);
+
     createBusinessDay(
         businessDate: string,
         openedAt: string,
@@ -75,6 +83,14 @@ export class BusinessDayRepository {
             BusinessDayStatus.CLOSED,
             new Date().toISOString(),
             businessDayId,
+        );
+    }
+
+    extendBusinessDay(businessDayId: string, scheduledCloseAt: string): void {
+        this.extendBusinessDayStatement.run(
+            scheduledCloseAt,
+            businessDayId,
+            BusinessDayStatus.OPEN,
         );
     }
 }

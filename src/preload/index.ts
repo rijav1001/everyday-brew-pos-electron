@@ -190,6 +190,12 @@ if (process.contextIsolated) {
 
         close: (businessDayId: string) =>
           ipcRenderer.invoke("businessDay:close", businessDayId),
+
+        extend: (businessDayId: string, scheduledCloseAt: string) =>
+          ipcRenderer.invoke("businessDay:extend", businessDayId, scheduledCloseAt),
+
+        getStatus: () =>
+          ipcRenderer.invoke("businessDay:getStatus"),
       },
     })
   } catch (error) {
