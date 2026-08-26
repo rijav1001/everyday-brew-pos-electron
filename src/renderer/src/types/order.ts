@@ -1,4 +1,4 @@
-import { BillingSummary } from "@renderer/utils/billing";
+import { BillingSummary } from "../../../renderer/src/utils/billing";
 import { PaymentMethod } from "./payment";
 import { MenuAddon, MenuItem } from "./menu";
 

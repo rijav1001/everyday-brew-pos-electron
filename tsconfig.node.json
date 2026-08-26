@@ -7,7 +7,8 @@
     "src/shared/**/*", 
     "src/renderer/src/**/*.d.ts",
     "src/renderer/src/constants/categoryIcons.ts",
-    "src/renderer/src/types/*"  
+    "src/renderer/src/types/*",
+    "src/renderer/src/utils/*"
   ],
   "compilerOptions": {
     "composite": true,

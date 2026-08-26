@@ -1,5 +1,5 @@
-import { MenuItemDto, MenuAddonDto } from "src/shared/menu";
-import { CategoryDto, MenuCategoryIcon } from "src/shared/category";
+import { MenuItemDto, MenuAddonDto } from "../../../shared/menu";
+import { CategoryDto, MenuCategoryIcon } from "../../../shared/category";
 
 export type { MenuCategoryIcon };
 
