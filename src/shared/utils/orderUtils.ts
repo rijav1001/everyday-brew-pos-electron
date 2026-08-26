@@ -1,24 +1,28 @@
-import type { MenuAddon} from "../../renderer/src/types/menu"
+type AddonComparable = {
+    id?: string;
+    name: string;
+    price: number;
+}
 
 export function areAddonsEqual(
-    first: MenuAddon[],
-    second: MenuAddon[]
+    first: AddonComparable[],
+    second: AddonComparable[]
 ): boolean {
     if (first.length !== second.length) {
         return false;
     }
 
     const firstIds = first
-        .map(addon => addon.id)
+        .map(addon => `${addon.name}|${addon.price}`)
         .sort();
 
     const secondIds = second
-        .map(addon => addon.id)
+        .map(addon => `${addon.name}|${addon.price}`)
         .sort();
 
     return firstIds.every(
-        (id, idx) => id === secondIds[idx]
-    )
+        (addon, idx) => addon === secondIds[idx]
+    );
 }
 
 export function normalizeNotes(notes: string): string {

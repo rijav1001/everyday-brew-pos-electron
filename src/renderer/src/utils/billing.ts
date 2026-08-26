@@ -1,5 +1,5 @@
-import { DEFAULT_GST_RATE } from "@renderer/config/tax";
-import type { OrderItem } from "@renderer/types/order";
+import { DEFAULT_GST_RATE } from "../../../renderer/src/config/tax";
+import type { OrderItem } from "../../../renderer/src/types/order";
 
 export interface BillingSummary {
     subtotal: number;

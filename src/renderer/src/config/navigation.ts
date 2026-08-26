@@ -7,8 +7,8 @@ import {
     ClipboardList,
 } from "lucide-react";
 
-import type { NavigationItem } from "@renderer/types/navigation";
-import { ROUTES } from "@renderer/config/routes";
+import type { NavigationItem } from "../../../renderer/src/types/navigation";
+import { ROUTES } from "../../../renderer/src/config/routes";
 
 export const navigationItems: NavigationItem[] = [
     {

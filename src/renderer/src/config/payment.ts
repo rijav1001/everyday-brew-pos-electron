@@ -1,4 +1,4 @@
-import type { PaymentMethod } from "@renderer/types/payment";
+import type { PaymentMethod } from "../../../renderer/src/types/payment";
 
 export interface PaymentOption {
     id: PaymentMethod;
