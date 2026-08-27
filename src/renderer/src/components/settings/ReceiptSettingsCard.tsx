@@ -98,7 +98,7 @@ function ReceiptSettingsCard({
 
                         </SelectTrigger>
 
-                        <SelectContent>
+                        <SelectContent className="bg-white">
 
                             <SelectItem value="58">
                                 58 mm
@@ -149,7 +149,7 @@ function ReceiptSettingsCard({
                 </div>
 
                 <Button
-                    className="cursor-pointer"
+                    className="cursor-pointer border-primary bg-sidebar text-white hover:bg-primary hover:text-secondary"
                     onClick={() => {
                         onSave(form);
                         toast.success("Receipt settings saved successfully!");

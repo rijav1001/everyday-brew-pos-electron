@@ -177,7 +177,7 @@ function BusinessSettingsCard({
                 </p>
 
                 <Button
-                    className="cursor-pointer"
+                    className="cursor-pointer border-primary bg-sidebar text-white hover:bg-primary hover:text-secondary"
                     onClick={() => {
                         onSave(form);
                         toast.success("Business information saved successfully!");

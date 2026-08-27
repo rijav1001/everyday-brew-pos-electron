@@ -78,7 +78,7 @@ function TaxSettingsCard({
                 </div>
 
                 <Button
-                    className="cursor-pointer"
+                    className="cursor-pointer border-primary bg-sidebar text-white hover:bg-primary hover:text-secondary"
                     onClick={() => {
                         onSave(form);
                         toast.success("Tax settings saved successfully!");

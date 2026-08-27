@@ -1,4 +1,5 @@
 import { getDatabase } from "./database";
+import { runMigrations } from "./migrations";
 import { seedDatabase } from "./seed";
 // import { runMigrations } from "./migrations";
 
@@ -48,6 +49,9 @@ export function initializeDatabase(): void {
             subtotal REAL NOT NULL,
             gst_amount REAL NOT NULL,
             grand_total REAL NOT NULL,
+            discount_type TEXT,
+            discount_value REAL NOT NULL DEFAULT 0,
+            discount_amount REAL NOT NULL DEFAULT 0,
 
             payment_method TEXT NOT NULL,
 
@@ -105,7 +109,7 @@ export function initializeDatabase(): void {
 
     console.log("✅ SQLite initialized");
 
-    // runMigrations(db);
+    runMigrations(db);
 
     seedDatabase();
 }

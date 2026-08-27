@@ -37,7 +37,7 @@ function BackupRestoreCard({
                     </p>
 
                     <Button
-                        className="cursor-pointer"
+                        className="cursor-pointer border-primary bg-sidebar text-white hover:bg-primary hover:text-secondary"
                         onClick={() => {
                             onBackup();
                             toast.success("Database backed up successfully!");
@@ -60,7 +60,7 @@ function BackupRestoreCard({
                     </p>
 
                     <Button
-                        className="cursor-pointer"
+                        className="cursor-pointer border-primary bg-sidebar text-white hover:bg-primary hover:text-secondary"
                         variant="destructive"
                         onClick={() => {
                             onRestore();
