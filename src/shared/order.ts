@@ -23,6 +23,9 @@ export interface OrderItemDto {
 export interface CompletedOrderDto {
     subtotal: number;
     gstAmount: number;
+    discountType: "fixed" | "percentage" | null;
+    discountValue: number;
+    discountAmount: number;
     grandTotal: number;
 
     paymentMethod: PaymentMethod;

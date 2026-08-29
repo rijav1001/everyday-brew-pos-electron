@@ -10,6 +10,8 @@ import { calculateBillingSummary } from "@renderer/utils/billing";
 import CashPayment from "./CashPayment";
 import SplitPayment from "./SplitPayment";
 import { Checkbox } from "../ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { Input } from "../ui/input";
 
 interface OrderSummaryProps {
     items: OrderItem[];
@@ -29,6 +31,10 @@ interface OrderSummaryProps {
     onIncreaseQuantity: (item: OrderItem) => void;
     onDecreaseQuantity: (item: OrderItem) => void;
     onEditItem: (item: OrderItem) => void;
+    discountType: "fixed" | "percentage" | null;
+    discountValue: number;
+    onDiscountTypeChange: (type: "fixed" | "percentage" | null) => void;
+    onDiscountValueChange: (value: number) => void;
 }
 
 function OrderSummary({ 
@@ -49,8 +55,12 @@ function OrderSummary({
     onIncreaseQuantity,
     onDecreaseQuantity,
     onEditItem,
+    discountType,
+    discountValue,
+    onDiscountTypeChange,
+    onDiscountValueChange
 }: OrderSummaryProps) {
-    const billing = calculateBillingSummary(items)
+    const billing = calculateBillingSummary(items, discountType, discountValue);
 
     const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -135,6 +145,20 @@ function OrderSummary({
                                 </span>
                             </div>
 
+                            {billing.discountAmount > 0 && (
+                                <div className="flex items-center justify-between text-sm text-(--text-secondary)">
+                                    <span>
+                                        Discount 
+                                        {billing.discountType === "percentage" &&
+                                            ` (${billing.discountAmount}%)`}
+                                    </span>
+
+                                    <span>
+                                        -₹{billing.discountAmount.toFixed(2)}
+                                    </span>
+                                </div>
+                            )}
+
                             {billing.roundOff !== 0 && (
                                 <div className="flex items-center justify-between text-sm text-(--text-secondary)">
                                     <span>
@@ -148,6 +172,68 @@ function OrderSummary({
                                 </div>
                             )}
 
+                        </div>
+
+                        {/* Discount section */}
+                        <div className="border-b pb-4">
+                            <div className="mb-3 flex items-center justify-between">
+                                <span className="text-sm font-medium">
+                                    Discount
+                                </span>
+
+                                {discountType && (
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-7 cursor-pointer text-xs"
+                                        onClick={() => {
+                                            onDiscountTypeChange(null);
+                                            onDiscountValueChange(0);
+                                        }}
+                                    >
+                                        Remove
+                                    </Button>
+                                )}
+                            </div>
+
+                            <div className="flex gap-2">
+                                <Select
+                                    value={discountType ?? ""}
+                                    onValueChange={(value) =>
+                                        onDiscountTypeChange(
+                                            value as "fixed" | "percentage",
+                                        )
+                                    }
+                                >
+                                    <SelectTrigger className="w-32.5 cursor-pointer">
+                                        <SelectValue placeholder="Type" />
+                                    </SelectTrigger>
+
+                                    <SelectContent className="bg-white">
+                                        <SelectItem value="fixed">
+                                            Fixed (₹)
+                                        </SelectItem>
+
+                                        <SelectItem value="percentage">
+                                            Percentage (%)
+                                        </SelectItem>
+                                    </SelectContent>
+                                </Select>
+
+                                <Input
+                                    type="number"
+                                    min="0"
+                                    value={discountValue || ""}
+                                    disabled={!discountType}
+                                    placeholder="Amount"
+                                    onChange={(event) =>
+                                        onDiscountValueChange(
+                                            Number(event.target.value),
+                                        )
+                                    }
+                                />
+                            </div>
                         </div>
 
                         {/* Grand Total */}

@@ -37,6 +37,10 @@ interface OrdersLayoutProps {
     onEditOrderItem: (item: OrderItem) => void;
     searchQuery: string;
     onSearchQueryChange: (value: string) => void;
+    discountType: "fixed" | "percentage" | null;
+    discountValue: number;
+    onDiscountTypeChange: (type: "fixed" | "percentage" | null) => void;
+    onDiscountValueChange: (value: number) => void;
 }
 
 function OrdersLayout({ 
@@ -64,7 +68,11 @@ function OrdersLayout({
     onDecreaseOrderItemQuantity,
     onEditOrderItem,
     searchQuery,
-    onSearchQueryChange
+    onSearchQueryChange,
+    discountType,
+    discountValue,
+    onDiscountTypeChange,
+    onDiscountValueChange
 }: OrdersLayoutProps) {
 
     const searchInputRef = useRef<HTMLInputElement>(null);
@@ -145,6 +153,10 @@ function OrdersLayout({
                     onIncreaseQuantity={onIncreaseOrderItemQuantity}
                     onDecreaseQuantity={onDecreaseOrderItemQuantity}
                     onEditItem={onEditOrderItem}
+                    discountType={discountType}
+                    discountValue={discountValue}
+                    onDiscountTypeChange={onDiscountTypeChange}
+                    onDiscountValueChange={onDiscountValueChange}
                 />
             </section>
 

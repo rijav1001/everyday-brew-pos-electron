@@ -35,6 +35,8 @@ function OrdersPage() {
     const [isCompletingOrder, setIsCompletingOrder] = useState(false);
     const [editingOrderItem, setEditingOrderItem] = useState<OrderItem | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const [discountType, setDiscountType] = useState<"fixed" | "percentage" | null>(null);
+    const [discountValue, setDiscountValue] = useState(0);
 
     async function loadOrder(orderId: string) {
         const details = await orderService.getDetails(orderId);
@@ -167,7 +169,7 @@ function OrdersPage() {
         await loadOrder(activeOrderId);
     }
 
-    const billing = calculateBillingSummary(orderItems); // Temporary
+    const billing = calculateBillingSummary(orderItems, discountType, discountValue); // Temporary
 
     const isPaymentValid = (() => {
 
@@ -234,6 +236,8 @@ function OrdersPage() {
             setOrderItems([]);
             setActiveOrderId(null);
             setPaymentMethod("cash");
+            setDiscountType(null);
+            setDiscountValue(0);
             setCashReceived(null);
             setSplitCash(null);
             setSplitUpi(null);
@@ -318,6 +322,10 @@ function OrdersPage() {
                     onEditOrderItem={handleEditOrderItem}
                     searchQuery={searchQuery}
                     onSearchQueryChange={setSearchQuery}
+                    discountType={discountType}
+                    discountValue={discountValue}
+                    onDiscountTypeChange={setDiscountType}
+                    onDiscountValueChange={setDiscountValue}
                 />
 
                 <CustomizeDrinkDialog

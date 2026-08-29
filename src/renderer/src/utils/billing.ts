@@ -8,6 +8,9 @@ export interface BillingSummary {
     sgst: number;
     totalGst: number;
     roundOff: number;
+    discountType: "fixed" | "percentage" | null;
+    discountValue: number;
+    discountAmount: number;
     grandTotal: number;
 }
 
@@ -21,7 +24,11 @@ function roundToTwo(value: number): number {
     return Math.round(value * 100) / 100;
 }
 
-export function calculateBillingSummary(items: OrderItem[]): BillingSummary {
+export function calculateBillingSummary(
+    items: OrderItem[],
+    discountType: "fixed" | "percentage" | null = null,
+    discountValue: number = 0
+): BillingSummary {
     let subtotal = 0;
 
     let taxableAmount = 0;
@@ -44,7 +51,14 @@ export function calculateBillingSummary(items: OrderItem[]): BillingSummary {
     const cgst = roundToTwo(totalGst / 2);
     const sgst = roundToTwo(totalGst / 2);
 
-    const roundedGrandTotal = Math.round(subtotal);
+    const safeDiscountValue = Math.max(0, discountValue);
+    const discountAmount = 
+        discountType === "fixed" ? safeDiscountValue : 
+        (discountType === "percentage" ? subtotal * (safeDiscountValue / 100) : 0);
+
+    const safeDiscountAmount = Math.min(discountAmount, subtotal);
+
+    const roundedGrandTotal = Math.round(subtotal - safeDiscountAmount);
 
     const roundOff = roundToTwo(roundedGrandTotal - subtotal);
 
@@ -56,6 +70,9 @@ export function calculateBillingSummary(items: OrderItem[]): BillingSummary {
         totalGst,
         roundOff: roundOff,
         grandTotal: roundedGrandTotal,
+        discountType,
+        discountValue,
+        discountAmount: safeDiscountAmount
     };
 }
 

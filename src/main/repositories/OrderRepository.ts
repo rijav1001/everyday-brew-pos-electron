@@ -98,6 +98,9 @@ export class OrderRepository {
         SET
             subtotal = ?,
             gst_amount = ?,
+            discount_type = ?,
+            discount_value = ?,
+            discount_amount = ?,
             grand_total = ?,
             payment_method = ?,
             completed_at = ?,
@@ -167,6 +170,9 @@ export class OrderRepository {
         this.completeOrderStatement.run(
             order.subtotal,
             order.gstAmount,
+            order.discountType,
+            order.discountValue,
+            order.discountAmount,
             order.grandTotal,
             order.paymentMethod,
             order.completedAt,

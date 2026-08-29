@@ -13,6 +13,9 @@ export function mapCompletedOrder(
     return {
         subtotal: billing.subtotal,
         gstAmount: billing.cgst + billing.sgst,
+        discountType: billing.discountType,
+        discountValue: billing.discountValue,
+        discountAmount: billing.discountAmount,
         grandTotal: billing.grandTotal,
 
         paymentMethod,
