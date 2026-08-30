@@ -58,9 +58,11 @@ export function calculateBillingSummary(
 
     const safeDiscountAmount = Math.min(discountAmount, subtotal);
 
-    const roundedGrandTotal = Math.round(subtotal - safeDiscountAmount);
+    const discountedTotal = subtotal - safeDiscountAmount;
 
-    const roundOff = roundToTwo(roundedGrandTotal - subtotal);
+    const roundedGrandTotal = Math.round(discountedTotal);
+
+    const roundOff = roundToTwo(roundedGrandTotal - discountedTotal);
 
     return {
         subtotal,

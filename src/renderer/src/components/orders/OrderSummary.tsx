@@ -150,7 +150,7 @@ function OrderSummary({
                                     <span>
                                         Discount 
                                         {billing.discountType === "percentage" &&
-                                            ` (${billing.discountAmount}%)`}
+                                            ` (${billing.discountValue}%)`}
                                     </span>
 
                                     <span>
@@ -206,7 +206,7 @@ function OrderSummary({
                                         )
                                     }
                                 >
-                                    <SelectTrigger className="w-32.5 cursor-pointer">
+                                    <SelectTrigger className="h-10 w-32.5 cursor-pointer">
                                         <SelectValue placeholder="Type" />
                                     </SelectTrigger>
 
@@ -222,6 +222,7 @@ function OrderSummary({
                                 </Select>
 
                                 <Input
+                                    className="h-10"
                                     type="number"
                                     min="0"
                                     value={discountValue || ""}

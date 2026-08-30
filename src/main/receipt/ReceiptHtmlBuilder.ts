@@ -260,59 +260,35 @@ export class ReceiptHtmlBuilder {
 
                 <table>
 
-                <tr>
+                    <tr>
 
-                    <td>Bill No.</td>
+                        <td>Bill No.</td>
 
-                    <td colspan="2" class="price">
-                        ${order.billNumber}
-                    </td>
+                        <td colspan="2" class="price">
+                            ${order.billNumber}
+                        </td>
 
-                </tr>
+                    </tr>
 
-                <tr>
+                    <tr>
 
-                    <td>Date</td>
+                        <td>Date</td>
 
-                    <td colspan="2" class="price">
-                        ${new Date(order.completedAt!).toLocaleString()}
-                    </td>
+                        <td colspan="2" class="price">
+                            ${new Date(order.completedAt!).toLocaleString()}
+                        </td>
 
-                </tr>
+                    </tr>
 
-                <tr>
+                    <tr>
 
-                    <td>Payment</td>
+                        <td>Payment</td>
 
-                    <td colspan="2" class="price">
-                        ${order.paymentMethod.toUpperCase()}
-                    </td>
+                        <td colspan="2" class="price">
+                            ${order.paymentMethod.toUpperCase()}
+                        </td>
 
-                </tr>
-
-                </table>
-
-                <div class="separator"></div>
-
-                <table>
-
-                <tr>
-
-                    <th align="left">
-                        Item
-                    </th>
-
-                    <th class="qty">
-                        Qty
-                    </th>
-
-                    <th align="right">
-                        Amount
-                    </th>
-
-                </tr>
-
-                ${itemsHtml}
+                    </tr>
 
                 </table>
 
@@ -320,69 +296,114 @@ export class ReceiptHtmlBuilder {
 
                 <table>
 
-                <tr>
+                    <tr>
 
-                    <td>
-                        Total Qty
-                    </td>
+                        <th align="left">
+                            Item
+                        </th>
 
-                    <td></td>
+                        <th class="qty">
+                            Qty
+                        </th>
 
-                    <td class="price">
-                        ${totalQuantity}
-                    </td>
+                        <th align="right">
+                            Amount
+                        </th>
 
-                </tr>
+                    </tr>
 
-                <tr>
+                    ${itemsHtml}
 
-                    <td>
-                        Subtotal
-                    </td>
+                </table>
 
-                    <td></td>
+                <div class="separator"></div>
 
-                    <td class="price">
-                        ${formatCurrency(order.subtotal)}
-                    </td>
+                <table>
 
-                </tr>
+                    <tr>
 
-                <tr>
+                        <td>
+                            Total Qty
+                        </td>
 
-                    <td colspan="3" class="small">
-                        (Net Total Inclusive of GST)
-                    </td>
+                        <td></td>
 
-                </tr>
+                        <td class="price">
+                            ${totalQuantity}
+                        </td>
 
-                <tr>
+                    </tr>
 
-                    <td>
-                        CGST @2.5%
-                    </td>
+                    <tr>
 
-                    <td></td>
+                        <td>
+                            Subtotal
+                        </td>
 
-                    <td class="price">
-                        ${formatCurrency(cgst)}
-                    </td>
+                        <td></td>
 
-                </tr>
+                        <td class="price">
+                            ${formatCurrency(order.subtotal)}
+                        </td>
 
-                <tr>
+                    </tr>
 
-                    <td>
-                        SGST @2.5%
-                    </td>
+                    <tr>
 
-                    <td></td>
+                        <td colspan="3" class="small">
+                            (Net Total Inclusive of GST)
+                        </td>
 
-                    <td class="price">
-                        ${formatCurrency(sgst)}
-                    </td>
+                    </tr>
 
-                </tr>
+                    <tr>
+
+                        <td>
+                            CGST @2.5%
+                        </td>
+
+                        <td></td>
+
+                        <td class="price">
+                            ${formatCurrency(cgst)}
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>
+                            SGST @2.5%
+                        </td>
+
+                        <td></td>
+
+                        <td class="price">
+                            ${formatCurrency(sgst)}
+                        </td>
+
+                    </tr>
+
+                    ${order.discountAmount > 0 ? `
+                        <tr>
+
+                            <td>
+                                Discount${
+                                    order.discountType === "percentage"
+                                        ? ` (${order.discountValue}%)`
+                                        : ""
+                                }
+                            </td>
+
+                            <td></td>
+
+                            <td class="price">
+                                -${formatCurrency(order.discountAmount)}
+                            </td>
+
+                        </tr>
+                        ` : 
+                    ""}
 
                 </table>
 
@@ -390,19 +411,19 @@ export class ReceiptHtmlBuilder {
 
                 <table>
 
-                <tr class="grand-total">
+                    <tr class="grand-total">
 
-                    <td>
-                        GRAND TOTAL
-                    </td>
+                        <td>
+                            GRAND TOTAL
+                        </td>
 
-                    <td></td>
+                        <td></td>
 
-                    <td class="price">
-                        ${formatCurrency(order.grandTotal)}
-                    </td>
+                        <td class="price">
+                            ${formatCurrency(order.grandTotal)}
+                        </td>
 
-                </tr>
+                    </tr>
 
                 </table>
 
